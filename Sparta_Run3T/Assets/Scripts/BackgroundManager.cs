@@ -5,7 +5,7 @@ using UnityEngine;
 public class BackgroundManager : MonoBehaviour
 {
     //[SerializeField] private GameObject background;
-    //[SerializeField] private int backgroundCount = 3;
+    [SerializeField] private int backgroundCount = 3;
     [SerializeField][Range(1f, 20f)] private float Speed = 4f;
     [SerializeField] private float changeDistance= 300f;
 
