@@ -8,9 +8,9 @@ public class GoldCoin : MonoBehaviour
 
     public void Collect()
     {
-        ScoreManager.Instance.AddScore(pointValue);   //ÄÚÀÎ Ãß°¡
+        ScoreManager.Instance.AddScore(pointValue);   //ì ìˆ˜ ì¶”ê°€
 
-        Destroy(gameObject);   //ÄÚÀÎ Á¦°Å
+        Destroy(gameObject);   //ì½”ì¸ ì œê±°
 
     }
 
