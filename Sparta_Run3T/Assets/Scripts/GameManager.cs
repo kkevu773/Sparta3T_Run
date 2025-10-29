@@ -2,12 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState
+{
+    Ready,      // 게임 시작 전, 첫 화면
+    Playing,
+    GameOver
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
     private void Awake()
     {
+        // GameManager 가 여러 개 생성되는 것을 방지
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -28,5 +36,20 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void StartGame()
+    {
+        // TODO : 게임 시작 시, 초기화 로직 작성
+    }
+
+    public void RestartGame()
+    {
+        // TODO : ActiveScene 을 재활용하는 방식으로 게임 재시작?
+    }
+
+    public void GameOver()
+    {
+        // TODO : 게임오버 로직 작성
     }
 }
