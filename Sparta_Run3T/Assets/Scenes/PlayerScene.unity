@@ -183,7 +183,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.67, y: 0.73}
+  m_Size: {x: 0.67, y: 0.66}
   m_EdgeRadius: 0
 --- !u!4 &319025661
 Transform:
@@ -193,8 +193,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 319025659}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.04, y: -1.56, z: -0.014051668}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.04, y: -1.5600001, z: -0.014051668}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -277,11 +277,11 @@ Transform:
   m_GameObject: {fileID: 513064410}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.24, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.5248667, z: 0}
+  m_LocalScale: {x: 1, y: 1.0666667, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1445493095}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &914013141
 GameObject:
@@ -340,11 +340,11 @@ Transform:
   m_GameObject: {fileID: 1183242484}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.006000012, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.27733335, z: 0}
+  m_LocalScale: {x: 1, y: 1.0666667, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1445493095}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1183242486
 SpriteRenderer:
@@ -590,10 +590,12 @@ Transform:
   m_GameObject: {fileID: 1445493092}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.305, z: 0}
-  m_LocalScale: {x: 1, y: 0.77468747, z: 1}
+  m_LocalPosition: {x: 0, y: 0.266, z: 0}
+  m_LocalScale: {x: 1, y: 0.9375, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 513064411}
+  - {fileID: 1183242485}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1445493096
@@ -616,8 +618,8 @@ MonoBehaviour:
   runB: {fileID: 21300000, guid: 7f672552c0ce0184a8bc5afa8b83a2c3, type: 3}
   jumpSprite: {fileID: 21300000, guid: 2069a049fe85f914581ab804e71a6e9e, type: 3}
   slideSprite: {fileID: 21300000, guid: 9fb23b8a1a79295468471bdc959efa52, type: 3}
-  doubleJumpSprite: {fileID: 21300000, guid: ca11dd9cc952ed747aba701a983ef555, type: 3}
-  runFrameTime: 0.15
+  doubleJumpSprite: {fileID: 21300000, guid: aa499a4b33ab97b4e88badf326f500c8, type: 3}
+  runFrameTime: 0.08
   jumpForce: 10
   maxJumps: 2
   slideKey: 306
@@ -630,15 +632,13 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  spinDuration: 0.3
-  slideVisualOffset: {x: 0, y: -0.13, z: 0}
+  spinDuration: 0.16
+  slideVisualOffset: {x: 0, y: -0.06, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1239553904}
   - {fileID: 1445493095}
-  - {fileID: 319025661}
-  - {fileID: 513064411}
-  - {fileID: 1183242485}
   - {fileID: 914013142}
+  - {fileID: 319025661}
