@@ -260,9 +260,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backgroundPrefabs:
   - {fileID: 2498067515686795691, guid: 74b5ef0bdf6972d4d840c555bc70112f, type: 3}
+  - {fileID: 3439980247089928784, guid: 4309e9fdbb9320c4a9a2610a681d82ab, type: 3}
   backgroundCount: 3
   speed: 4
-  changeDistance: 1000000
+  changeDistance: 100
 --- !u!1 &1762517593
 GameObject:
   m_ObjectHideFlags: 0
