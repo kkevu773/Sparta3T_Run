@@ -103,6 +103,11 @@ public class PlayerMove : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.Play(SoundKey.SFX_PLAYER_JUMP);
+        }
+
         if (isSecondJump)
             StartDoubleJumpFX();
 
