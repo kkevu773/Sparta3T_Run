@@ -38,9 +38,14 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void StartGame()
+    public void InitGame()
     {
         // TODO : 게임 시작 시, 초기화 로직 작성
+    }
+
+    public void StartGame()
+    {
+        
     }
 
     public void RestartGame()
