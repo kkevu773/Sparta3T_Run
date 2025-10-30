@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2241005822387419737}
   - component: {fileID: 8818998523387671904}
   - component: {fileID: 3314135283192757411}
+  - component: {fileID: 1590016515994017504}
   m_Layer: 0
   m_Name: Barnacle
   m_TagString: Untagged
@@ -74,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 60
   m_Sprite: {fileID: 21300000, guid: 2b97e4f0b6fcdc14ebed1dbeffcb7e4a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -162,6 +163,26 @@ PolygonCollider2D:
       - {x: 0.26, y: -0.099999994}
       - {x: 0.28, y: 0.21}
   m_UseDelaunayMesh: 0
+--- !u!114 &1590016515994017504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120083970060745978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f541442568b8f554b9899a6a4d7a7ecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  destroyX: -10
+  highPosY: 1
+  lowPosY: -1
+  holeSizeMin: 1
+  holeSizeMax: 3
+  widthPadding: 4
+  obstaclePrefabs: []
 --- !u!1 &1152778861677807131
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +257,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 60
   m_Sprite: {fileID: 21300000, guid: f9462b0e266ce184e92ffae67158d01f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -399,7 +420,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 60
   m_Sprite: {fileID: 21300000, guid: 646593b3a81f16c43b2c01f87e622812, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -566,7 +587,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 60
   m_Sprite: {fileID: 21300000, guid: cccdef78ff6239641bb85abbd8bd754d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -731,7 +752,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 60
   m_Sprite: {fileID: 21300000, guid: 310af40574d5d9342aef1936b6089f01, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -865,16 +886,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f541442568b8f554b9899a6a4d7a7ecf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 5
+  destroyX: -10
   highPosY: 1
   lowPosY: -1
   holeSizeMin: 1
   holeSizeMax: 3
-  sawObject: {fileID: 1848286112723311917}
-  beeObject: {fileID: 8589207569354983733}
-  FrogObject: {fileID: 712132536997774698}
-  FlyObject: {fileID: 8684652009695479408}
-  Barnacle: {fileID: 8111140843205999075}
   widthPadding: 4
+  obstaclePrefabs: []
 --- !u!61 &7400837702800398516
 BoxCollider2D:
   m_ObjectHideFlags: 0
