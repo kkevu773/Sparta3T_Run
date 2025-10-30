@@ -67,6 +67,10 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         // TODO : 게임오버 로직 작성
+        currentState = GameState.GameOver;
+        Debug.Log("게임 오버!");
+    }
+
     public void RestartGame()
     {
         // TODO : ActiveScene 을 재활용하는 방식으로 게임 재시작?
