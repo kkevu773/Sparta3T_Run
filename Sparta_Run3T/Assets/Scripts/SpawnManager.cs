@@ -30,8 +30,5 @@ public class SpawnManager : MonoBehaviour
             Instantiate(silverCoinPrefab, spawnPos, Quaternion.identity);
 
         lastSpawnPosition = spawnPos;
-
-
-
     }
 }
