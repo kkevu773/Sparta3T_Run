@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -62,13 +63,13 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void RestartGame()
-    {
-        // TODO : ActiveScene 을 재활용하는 방식으로 게임 재시작?
-    }
 
     public void GameOver()
     {
         // TODO : 게임오버 로직 작성
+    public void RestartGame()
+    {
+        // TODO : ActiveScene 을 재활용하는 방식으로 게임 재시작?
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
