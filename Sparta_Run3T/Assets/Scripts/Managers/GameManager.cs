@@ -11,7 +11,15 @@ public enum GameState
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Managers")]
+    [SerializeField] private BackgroundManager bgManager;
+    [SerializeField] private SpawnManager spawnManager;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private PlayerMove player;
+    
     public static GameManager Instance { get; private set; }
+
+    private GameState currentState = GameState.Playing;
 
     private void Awake()
     {
