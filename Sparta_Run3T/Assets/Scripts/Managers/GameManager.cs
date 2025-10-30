@@ -60,9 +60,11 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        
-    }
+        // TODO : 게임 플레이를 시작하는 로직 작성
+        currentState = GameState.Playing;
 
+        //spawnManager?.SpawnCoin(spawnManager.LastSpawnPosition);
+    }    
 
     public void GameOver()
     {
