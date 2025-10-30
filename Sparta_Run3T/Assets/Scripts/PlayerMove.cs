@@ -67,12 +67,11 @@ public class PlayerMove : MonoBehaviour
 
         HandleInput();
         HandleAnim();
-        HandleSpin(); // ▼ 회전 업데이트
+        HandleSpin();
     }
 
     private void HandleInput()
     {
-        // 점프 (Input Manager 말고 인스펙터 키 사용)
         if (Input.GetKeyDown(jumpKey) && !isSliding)
             TryJump();
 
@@ -143,7 +142,6 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
-        // 기본 달리기 A/B 토글
         runTimer += Time.deltaTime;
         if (runTimer >= runFrameTime)
         {
