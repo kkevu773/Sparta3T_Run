@@ -44,7 +44,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        switch (currentState)
+        {
+            case GameState.Ready:
+                break;
+            case GameState.Playing:
+                Debug.Log("게임 시작!");
+                StartGame();
+                break;
+            case GameState.GameOver:
+                break;
+            default:
+                break;
+        }
     }
 
     public void InitGame()
