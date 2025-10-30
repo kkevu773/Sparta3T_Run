@@ -4,42 +4,49 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [Header("Refs")]
-    [SerializeField] private Rigidbody2D rb;        // Player 쪽 Rigidbody2D
-    [SerializeField] private BoxCollider2D bodyCol; // Player 쪽 BoxCollider2D
-    [SerializeField] private SpriteRenderer sr;     // MainSprite 쪽 SpriteRenderer
-    [SerializeField] private Transform groundCheck; // GroundCheck 트랜스폼
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private BoxCollider2D bodyCol;
+    [SerializeField] private SpriteRenderer sr;
+    [SerializeField] private Transform groundCheck;
 
-    [Header("Sprites")]
     [SerializeField] private Sprite runA;
     [SerializeField] private Sprite runB;
     [SerializeField] private Sprite jumpSprite;
     [SerializeField] private Sprite slideSprite;
 
-    [Header("Move / Jump / Slide")]
-    [SerializeField] private float runFrameTime = 0.15f; // 달리기 깜빡임 속도
-    [SerializeField] private float jumpForce = 8f;       // 점프 힘
-    [SerializeField] private int maxJumps = 2;           // 2면 더블 점프
+    [SerializeField] private Sprite doubleJumpSprite;
+
+    [SerializeField] private float runFrameTime = 0.15f;
+    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private int maxJumps = 2;
     [SerializeField] private KeyCode slideKey = KeyCode.LeftControl;
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
 
-
-    [Header("Collider Shapes")]
     [SerializeField] private Vector2 standColSize = new Vector2(0.8f, 1.2f);
     [SerializeField] private Vector2 standColOffset = new Vector2(0f, 0f);
     [SerializeField] private Vector2 slideColSize = new Vector2(1.2f, 0.6f);
     [SerializeField] private Vector2 slideColOffset = new Vector2(0f, -0.3f);
 
-    [Header("Ground Check")]
     [SerializeField] private float groundCheckRadius = 0.1f;
     [SerializeField] private LayerMask groundLayer;
 
-    // 내부 상태
+    [SerializeField] private float spinDuration = 0.5f;
+    [SerializeField] private Vector3 slideVisualOffset = new Vector3(0f, -0.2f, 0f);
+
+
     private bool isGrounded;
     private bool isSliding;
     private int jumpCount;
     private float runTimer;
-    private bool runToggle; // false -> runA, true -> runB
+    private bool runToggle;
+
+    private bool spinActive;
+    private float spinTimer;
+    private float spinStartRotZ;
+    private bool doubleJumpFX;
+
+    private Vector3 visualDefaultLocalPos;
+
 
     void Update()
     {
@@ -50,18 +57,23 @@ public class PlayerMove : MonoBehaviour
             groundLayer
         );
 
-        // 점프 카운트 리셋
         if (isGrounded && rb.velocity.y <= 0f)
+        {
             jumpCount = 0;
+            spinActive = false;
+            doubleJumpFX = false;
+            sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRotZ);
+        }
 
         HandleInput();
         HandleAnim();
+        HandleSpin(); // ▼ 회전 업데이트
     }
 
     private void HandleInput()
     {
-        // 점프
-        if (Input.GetButtonDown("Jump") && !isSliding)
+        // 점프 (Input Manager 말고 인스펙터 키 사용)
+        if (Input.GetKeyDown(jumpKey) && !isSliding)
             TryJump();
 
         // 슬라이드 시작
@@ -71,7 +83,7 @@ public class PlayerMove : MonoBehaviour
             ApplySlideCollider(true);
         }
 
-        // 슬라이드 종료
+        // 종료
         if (isSliding && Input.GetKeyUp(slideKey))
         {
             isSliding = false;
@@ -79,19 +91,44 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        visualDefaultLocalPos = sr.transform.localPosition;
+    }
     private void TryJump()
     {
         if (jumpCount >= maxJumps) return;
 
-        // 위로 튈 때 Y속도 초기화해서 항상 같은 힘으로 점프
+        bool isSecondJump = (jumpCount == 1);
+
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        if (isSecondJump)
+            StartDoubleJumpFX();
 
         jumpCount++;
     }
 
+    private void StartDoubleJumpFX()
+    {
+        // 회전 시작
+        spinActive = true;
+        spinTimer = 0f;
+        spinStartRotZ = sr.transform.localEulerAngles.z;
+
+        // 스프라이트
+        doubleJumpFX = true;
+    }
+
     private void HandleAnim()
     {
+        if (doubleJumpFX && doubleJumpSprite != null)
+        {
+            sr.sprite = doubleJumpSprite;
+            return;
+        }
+
         // 공중이면 점프 스프라이트
         if (!isGrounded)
         {
@@ -117,17 +154,40 @@ public class PlayerMove : MonoBehaviour
         sr.sprite = runToggle ? runA : runB;
     }
 
+    private void HandleSpin()
+    {
+        if (!spinActive) return;
+
+        spinTimer += Time.deltaTime;
+
+        float t = Mathf.Clamp01(spinTimer / spinDuration);
+        float angle = Mathf.Lerp(0f, 360f, t);
+        sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRotZ - angle);
+
+        if (spinTimer >= spinDuration)
+        {
+            spinActive = false;
+            sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRotZ);
+        }
+    }
+
+
+
     private void ApplySlideCollider(bool slide)
     {
         if (slide)
         {
             bodyCol.size = slideColSize;
             bodyCol.offset = slideColOffset;
+
+            sr.transform.localPosition = visualDefaultLocalPos + slideVisualOffset;
         }
         else
         {
             bodyCol.size = standColSize;
             bodyCol.offset = standColOffset;
+
+            sr.transform.localPosition = visualDefaultLocalPos;
         }
     }
 
@@ -138,4 +198,3 @@ public class PlayerMove : MonoBehaviour
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }
-
