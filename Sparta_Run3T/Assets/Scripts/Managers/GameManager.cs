@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        InitGame();
     }
 
     // Update is called once per frame
@@ -49,6 +49,12 @@ public class GameManager : MonoBehaviour
     public void InitGame()
     {
         // TODO : 게임 시작 시, 초기화 로직 작성
+
+        // 점수 초기화
+        scoreManager?.ResetScore();
+
+        // TODO : 첫 화면 구현 시, 주석 해제
+        //currentState = GameState.Ready;
     }
 
     public void StartGame()
