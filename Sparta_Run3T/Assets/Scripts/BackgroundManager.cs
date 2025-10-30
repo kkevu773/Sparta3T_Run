@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class BackgroundManager : MonoBehaviour
 {
-    //[SerializeField] private GameObject background;
+    [SerializeField] private GameObject[] backgroundPrefabs;
     [SerializeField] private int backgroundCount = 3;
-    [SerializeField][Range(1f, 20f)] private float Speed = 4f;
-    [SerializeField] private float changeDistance= 300f;
+    [SerializeField][Range(1f, 20f)] private float speed = 4f;
+    [SerializeField] private float changeDistance;
 
-
-   
-
-    private float BackgroundWidth;
+    private List<GameObject> activeBackgrounds = new List<GameObject>();
+    private float totalMovedDistance = 0f;
+    private int currentPrefabsIndex = 0;
+    private float backgroundWidth;
     private Camera camera;
 
 
@@ -20,24 +20,69 @@ public class BackgroundManager : MonoBehaviour
     void Start()
     {
         camera = Camera.main;
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-        BackgroundWidth = sr.bounds.size.x;
+        SpriteRenderer sr = backgroundPrefabs[0].GetComponent<SpriteRenderer>();
+        backgroundWidth = sr.bounds.size.x;
+        
+        for (int i = 0;  i < backgroundCount; i++)
+        {
+            GameObject bg = Instantiate(backgroundPrefabs[0],
+                new Vector3(i * backgroundWidth, 0, 0),
+                Quaternion.identity,
+                transform);
+
+            activeBackgrounds.Add(bg);
+        } 
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector2.left * Speed * Time.deltaTime);
+        float move = speed * Time.deltaTime;
 
-        float cameraLeftEdge = camera.transform.position.x - (camera.orthographicSize * camera.aspect) - (BackgroundWidth / 2);
+        foreach (var bg in activeBackgrounds)
+            bg.transform.Translate(Vector2.left * move);
 
-        if (transform.position.x < cameraLeftEdge)
+        totalMovedDistance += move;
+
+        float cameraLeftEdge = camera.transform.position.x - (camera.orthographicSize * camera.aspect);
+        GameObject first = activeBackgrounds[0];
+        float leftX = first.transform.position.x + backgroundWidth / 2;
+
+
+        if (leftX < cameraLeftEdge)
         {
-            transform.position = new Vector3(
-                transform.position.x + BackgroundWidth * 2f,
-                transform.position.y,
-                transform.position.z
-                );
+            GameObject last = activeBackgrounds[activeBackgrounds.Count - 1];
+
+            first.transform.position = new Vector3(
+              last.transform.position.x + backgroundWidth ,
+              first.transform.position.y,
+              first.transform.position.z
+              );
+
+            activeBackgrounds.RemoveAt(0);
+            activeBackgrounds.Add(first);
+        }
+
+        if(totalMovedDistance >= changeDistance)
+        {
+            totalMovedDistance = 0;
+            ChangeTheme();
+        }
+    }
+
+    private void ChangeTheme()
+    {
+
+        currentPrefabsIndex++;
+        if (currentPrefabsIndex >= backgroundPrefabs.Length)
+            currentPrefabsIndex = 0;
+
+        SpriteRenderer newTheme = backgroundPrefabs[currentPrefabsIndex].GetComponent<SpriteRenderer>();
+        foreach(var bg in activeBackgrounds)
+        {
+            SpriteRenderer sr = bg.GetComponent<SpriteRenderer>();
+            sr.sprite = newTheme.sprite;
+            Debug.Log("전환");
         }
     }
 }
