@@ -1,31 +1,59 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
+    public float moveSpeed = 5f;
+    public float destroyX = -10;
+
     public float highPosY = 1f;
     public float lowPosY = -1f;
 
     public float holeSizeMin = 1f;
     public float holeSizeMax = 3f;
-
-    public Transform sawObject;
-    public Transform rockObject;
-    public Transform block_spikesObject;
-
     public float widthPadding = 4f;
 
-    public Vector3 SetRandomPlace(Vector3 lastPosition, int obstacleCount)
+    public GameObject[] obstaclePrefabs;
+
+    private void Update()
     {
-        float difficultyFactor = 1f - Mathf.Clamp01(obstacleCount * 0.02f);   // ³­ÀÌµµ°¡ ¿Ã¶ó°¥¼ö·Ï °£°ÝÀ» Á¶±Ý¾¿ ÁÙÀÌ±â, 0.02f = Àå¾Ö¹° 50°³ ³ª¿À¸é °£°ÝÀÌ Àý¹ÝÂë ÁÙ¾îµê (Á¶Àý °¡´É)
+        transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
 
-        float holeSize = Random.Range(holeSizeMin, holeSizeMax) * difficultyFactor;   // ±âº» ±¸¸Û Å©±â¿¡¼­ ³­ÀÌµµ Àû¿ë
+        if (transform.position.x <= destroyX)
+        {
+            Destroy(gameObject);
+        }
+    }
+    public Vector3 SetRandomPlace(Vector3 lastPosition,int obstacleCount)
+    {
+        float difficultyFactor = 1f - Mathf.Clamp01(obstacleCount * 0.02f);
+        float holeSize = Random.Range(holeSizeMin, holeSizeMax) * difficultyFactor;
+        float newX = lastPosition.x + widthPadding + holeSize;
+        float newY = Random.Range(lowPosY, highPosY);
+        return new Vector3(newX, newY, 0f);
+    }
+    public GameObject SpawnRandomObstacle(Vector3 spawnPosition)
+    {
+        if (obstaclePrefabs == null || obstaclePrefabs.Length == 0)
+        {
+            Debug.LogWarning("ë°°ì—´ ë¹”");
+            return null;
+        }
+        int randomIndex=Random.Range(0,obstaclePrefabs.Length);
 
-        float newX = lastPosition.x + widthPadding + holeSize;   // X À§Ä¡´Â ÀÌÀü Àå¾Ö¹°º¸´Ù ¾ÕÀ¸·Î ÀÏÁ¤ °Å¸®¸¸Å­ ÀÌµ¿
+        GameObject prefabToSpawn = obstaclePrefabs[randomIndex];
+        if (prefabToSpawn != null)
+        {
+            GameObject newObstacle = Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
 
-        float newY = Random.Range(lowPosY, highPosY);   // Y À§Ä¡´Â ·£´ý
-
-        return new Vector3(newX, newY, 0f);    // °á°ú ¹ÝÈ¯
+            return newObstacle;
+        }
+        else
+        {
+            Debug.LogWarning("ì„ íƒëœ ìž¥ì• ë¬¼ prefabì´ nullìž…ë‹ˆë‹¤!");
+            return null;
+        }
     }
 }
