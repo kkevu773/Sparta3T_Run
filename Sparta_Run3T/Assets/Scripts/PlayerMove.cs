@@ -41,8 +41,8 @@ public class PlayerMove : MonoBehaviour
     private bool runToggle;
 
     private bool spinActive;
-    private float spinTimer;
-    private float spinStartRotZ;
+    private float spinTime;
+    private float spinStartRZ;
     private bool doubleJumpFX;
 
     private Vector3 visualDefaultLocalPos;
@@ -62,7 +62,7 @@ public class PlayerMove : MonoBehaviour
             jumpCount = 0;
             spinActive = false;
             doubleJumpFX = false;
-            sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRotZ);
+            sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRZ);
         }
 
         HandleInput();
@@ -114,8 +114,8 @@ public class PlayerMove : MonoBehaviour
     {
         // 회전 시작
         spinActive = true;
-        spinTimer = 0f;
-        spinStartRotZ = sr.transform.localEulerAngles.z;
+        spinTime = 0f;
+        spinStartRZ = sr.transform.localEulerAngles.z;
 
         // 스프라이트
         doubleJumpFX = true;
@@ -158,16 +158,16 @@ public class PlayerMove : MonoBehaviour
     {
         if (!spinActive) return;
 
-        spinTimer += Time.deltaTime;
+        spinTime += Time.deltaTime;
 
-        float t = Mathf.Clamp01(spinTimer / spinDuration);
+        float t = Mathf.Clamp01(spinTime / spinDuration);
         float angle = Mathf.Lerp(0f, 360f, t);
-        sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRotZ - angle);
+        sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRZ - angle);
 
-        if (spinTimer >= spinDuration)
+        if (spinTime >= spinDuration)
         {
             spinActive = false;
-            sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRotZ);
+            sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRZ);
         }
     }
 
