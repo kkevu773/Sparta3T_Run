@@ -13,7 +13,7 @@ public class SpawnManager : MonoBehaviour
     public float maxY = 1f;
     public float xSpacing = 2f;
 
-    private Vector3 lastSpawnPosition=Vector3.zero;
+    public Vector3 lastSpawnPosition=Vector3.zero;
 
     public void SpawnCoin(Vector3 obstacleposition)
     {
