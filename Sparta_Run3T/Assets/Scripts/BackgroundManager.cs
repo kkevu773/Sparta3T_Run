@@ -13,13 +13,13 @@ public class BackgroundManager : MonoBehaviour
     private float totalMovedDistance = 0f;
     private int currentPrefabsIndex = 0;
     private float backgroundWidth;
-    private Camera camera;
+    private Camera cam;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        camera = Camera.main;
+        cam = Camera.main;
         SpriteRenderer sr = backgroundPrefabs[0].GetComponent<SpriteRenderer>();
         backgroundWidth = sr.bounds.size.x;
         
@@ -44,7 +44,7 @@ public class BackgroundManager : MonoBehaviour
 
         totalMovedDistance += move;
 
-        float cameraLeftEdge = camera.transform.position.x - (camera.orthographicSize * camera.aspect);
+        float cameraLeftEdge = GetComponent<Camera>().transform.position.x - (GetComponent<Camera>().orthographicSize * GetComponent<Camera>().aspect);
         GameObject first = activeBackgrounds[0];
         float leftX = first.transform.position.x + backgroundWidth / 2;
 
@@ -83,7 +83,7 @@ public class BackgroundManager : MonoBehaviour
             SpriteRenderer sr = bg.GetComponent<SpriteRenderer>();
             sr.sprite = newTheme.sprite;
             Debug.Log("전환");
-        }
+        } 
     }
 }
 
