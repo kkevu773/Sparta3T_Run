@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
 
             // Title UI 숨기기 (혹시 켜져있다면)
-            uiManager.ShowUI(UIKey.UI_TITLEL_PANEL, false);
+            uiManager.ShowUI(UIKey.UI_TITLE_PANEL, false);
         }
 
         // BGM 재생
@@ -379,7 +379,7 @@ public class GameManager : MonoBehaviour
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
 
             // 타이틀 UI 보이기
-            uiManager.ShowUI(UIKey.UI_TITLEL_PANEL, true);
+            uiManager.ShowUI(UIKey.UI_TITLE_PANEL, true);
         }
 
         // BGM 변경 (타이틀 BGM이 있다면)

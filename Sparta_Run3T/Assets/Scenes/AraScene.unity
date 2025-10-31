@@ -168,9 +168,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goldCoinPrefab: {fileID: 0}
   silverCoinPrefab: {fileID: 0}
+  coinsParent: {fileID: 0}
   minY: -1
   maxY: 1
-  xSpacing: 2
+  spawnX: 10
+  spawnInterval: 1.5
 --- !u!1 &1458460393
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,9 +217,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ad91af3e6d0084981024595acae870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundPrefabs: []
   backgroundCount: 3
-  Speed: 4
+  speed: 4
   changeDistance: 300
+  fadeDuration: 0.5
+  FadeObj: {fileID: 0}
 --- !u!1 &1509904827
 GameObject:
   m_ObjectHideFlags: 0
