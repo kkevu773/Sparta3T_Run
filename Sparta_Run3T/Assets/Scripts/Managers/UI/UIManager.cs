@@ -135,4 +135,3 @@ public class UIManager : MonoBehaviour
         hpBar.value = (float)current / max;
     }
 }
-  
