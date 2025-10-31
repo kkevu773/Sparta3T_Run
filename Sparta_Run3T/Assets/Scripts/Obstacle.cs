@@ -17,8 +17,14 @@ public class Obstacle : MonoBehaviour
 
     public GameObject[] obstaclePrefabs;
 
+    /* 장애물 이동/정지 구분 */
+    private bool canMove = true;
+
     private void Update()
     {
+        /* canMove == false => 바로 return */
+        if (!canMove) return;
+
         transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
 
         if (transform.position.x <= destroyX)
@@ -55,5 +61,19 @@ public class Obstacle : MonoBehaviour
             Debug.LogWarning("선택된 장애물 prefab이 null입니다!");
             return null;
         }
+    }
+
+
+
+    /* 장애물 이동 정지 */
+    public void StopMoving()
+    {
+        canMove = false;
+    }
+
+    /* 장애물 이동 시작 */
+    public void StartMoving()
+    {
+        canMove = true;
     }
 }
