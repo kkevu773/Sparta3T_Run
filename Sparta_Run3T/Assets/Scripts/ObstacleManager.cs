@@ -67,4 +67,32 @@ public class ObstacleManager : MonoBehaviour
 
         Debug.Log($"Spawned: {newObstacle.name} at {spawnPos}");
     }
+
+
+
+    /* 씬의 모든 장애물 제거 */
+    public void ClearAllObstacles()
+    {
+        if (obstaclesParent != null)
+        {
+            // 부모 오브젝트의 모든 자식 제거
+            foreach (Transform child in obstaclesParent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    /* 장애물 스폰 시작 */
+    public void StartSpawning()
+    {
+        timer = 0f;     /* 타이머 리셋 */
+        enabled = true;  /* Update 활성화 */
+    }
+
+    /* 장애물 스폰 정지 */
+    public void StopSpawning()
+    {
+        enabled = false;  /* Update 비활성화 */
+    }
 }
