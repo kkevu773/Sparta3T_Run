@@ -27,6 +27,12 @@ public class GameManager : MonoBehaviour
     public GameState currentState = GameState.Ready;
     public GameState CurrentState => currentState;
 
+    // PlayerPrefs 호출용 key string
+    private const string BEST_SCORE_KEY = "BestScore";
+
+    // 최고 점수 저장용 변수
+    private int bestScore = 0;
+
     private void Awake()
     {
         // GameManager가 여러 개 생성되는 것을 방지
@@ -38,6 +44,21 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // 씬 로드 이벤트 리스너 등록
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        // 이벤트 리스너 제거
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 씬이 로드된 후 매니저 참조들을 다시 찾아서 연결
+        StartCoroutine(ReconnectManagerReferences());
     }
 
     private void Start()
@@ -95,10 +116,15 @@ public class GameManager : MonoBehaviour
             scoreManager.ResetScore();
         }
 
+        // 최고점 불러오기 및 UI 갱신
+        LoadBestScore();
+
         // UI 초기화 - HUD 표시
         if (uiManager != null)
         {
             uiManager.UpdateScore(0);
+            uiManager.UpdateBestScore(bestScore);
+
             uiManager.ShowUI(UIKey.UI_HUD_SCORE_TEXT, true);
             uiManager.ShowUI(UIKey.UI_HUD_BESTSCORE_TEXT, true);
             uiManager.ShowUI(UIKey.UI_HUD_HP_BAR, true);
@@ -208,6 +234,9 @@ public class GameManager : MonoBehaviour
         // 게임 상태를 GameOver로 변경
         currentState = GameState.GameOver;
 
+        // 최고점 갱신 로직 (현재 점수 비교 후 필요 시 저장)
+        SaveBestScoreIfNeeded();
+
         // 모든 스폰 정지
         StopAllSpawners();
 
@@ -232,6 +261,9 @@ public class GameManager : MonoBehaviour
         // GameOver UI 표시
         if (uiManager != null)
         {
+            // GameOver 패널에서도 최고점 표시 갱신
+            uiManager.UpdateBestScore(bestScore);
+
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_PANEL, true);
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_RETRY_BUTTON, true);
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, true);
@@ -249,9 +281,9 @@ public class GameManager : MonoBehaviour
     {
         if (currentState != GameState.GameOver) return;
 
-        Debug.Log("=== 게임 재시작 ===");
+        Debug.Log("=== 게임 재시작 - 씬 Reload ===");
 
-        // 1. 씬 내의 모든 게임 오브젝트 정리
+        /*// 1. 씬 내의 모든 게임 오브젝트 정리
         ClearGameObjects();
 
         // 2. 매니저들 리셋
@@ -261,9 +293,32 @@ public class GameManager : MonoBehaviour
         InitGame();
 
         // 4. 바로 게임 시작하려면 이 줄 주석 해제
-        //StartGame();
+        //StartGame();*/
+
+        // 씬 전체 재로드(모든 타일 복구됨!)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    private IEnumerator ReconnectManagerReferences()
+    {
+        // 씬이 완전히 로드될 때까지 한 프레임 대기
+        yield return new WaitForEndOfFrame();
+
+        // 모든 매니저들을 찾아서 다시 연결
+        bgManager = FindObjectOfType<BackgroundManager>();
+        spawnManager = FindObjectOfType<SpawnManager>();
+        scoreManager = FindObjectOfType<ScoreManager>();
+        player = FindObjectOfType<PlayerMove>();
+        obstacleManager = FindObjectOfType<ObstacleManager>();
+        uiManager = FindObjectOfType<UIManager>();
+        audioManager = FindObjectOfType<AudioManager>();
+        tileMap = FindObjectOfType<TileMap>();
+
+        // 게임 초기화 실행
+        InitGame();
+    }
+
+    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
     // 씬 내의 모든 게임 오브젝트 정리
     private void ClearGameObjects()
     {
@@ -280,6 +335,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
     // 모든 매니저 리셋
     private void ResetAllManagers()
     {
@@ -357,6 +414,25 @@ public class GameManager : MonoBehaviour
 
             spawnManager.StopSpawning();
         }
+
+        // 이미 스폰된 장애물 / 코인 이동 정지
+        if (obstacleManager != null && obstacleManager.obstaclesParent != null)
+        {
+            var obstacles = obstacleManager.obstaclesParent.GetComponentsInChildren<Obstacle>(true);
+            foreach (var ob in obstacles)
+            {
+                if (ob != null) ob.StopMoving();
+            }
+        }
+
+        if (spawnManager != null && spawnManager.coinsParent != null)
+        {
+            var golds = spawnManager.coinsParent.GetComponentsInChildren<GoldCoin>(true);
+            foreach (var g in golds) if (g != null) g.StopMoving();
+
+            var silvers = spawnManager.coinsParent.GetComponentsInChildren<SliverCoin>(true);
+            foreach (var s in silvers) if (s != null) s.StopMoving();
+        }
     }
 
     // 타이틀 화면으로 돌아가기 (나중에 구현)
@@ -386,5 +462,26 @@ public class GameManager : MonoBehaviour
         // audioManager?.PlayBGM(SoundKey.BGM_TITLE);
 
         currentState = GameState.Ready;
+    }
+
+    // PlayerPrefs 관련: 최고점 불러오기
+    private void LoadBestScore()
+    {
+        bestScore = PlayerPrefs.GetInt(BEST_SCORE_KEY, 0);
+    }
+
+    // PlayerPrefs 관련: 현재 점수와 비교해 필요하면 저장
+    private void SaveBestScoreIfNeeded()
+    {
+        if (scoreManager == null) return;
+
+        int currentScore = scoreManager.GetScore();
+        if (currentScore > bestScore)
+        {
+            bestScore = currentScore;
+            PlayerPrefs.SetInt(BEST_SCORE_KEY, bestScore);
+            PlayerPrefs.Save();
+            Debug.Log($"새 최고점 저장: {bestScore}");
+        }
     }
 }
