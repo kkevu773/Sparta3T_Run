@@ -136,11 +136,11 @@ GameObject:
   - component: {fileID: 44962467}
   m_Layer: 7
   m_Name: ObsTile
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &44962466
 Transform:
   m_ObjectHideFlags: 0
@@ -11424,7 +11424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &685368750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11649,6 +11649,11 @@ MonoBehaviour:
   spawnManager: {fileID: 1174244674}
   scoreManager: {fileID: 880455720}
   player: {fileID: 1445493096}
+  obstacleManager: {fileID: 0}
+  uiManager: {fileID: 0}
+  audioManager: {fileID: 0}
+  tileMap: {fileID: 0}
+  currentState: 1
 --- !u!1 &914013141
 GameObject:
   m_ObjectHideFlags: 0
@@ -14045,16 +14050,6 @@ Tilemap:
   - first: {x: 117, y: -1, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 5
-      m_TileSpriteIndex: 5
-      m_TileMatrixIndex: 0
-      m_TileColorIndex: 0
-      m_TileObjectToInstantiateIndex: 65535
-      dummyAlignment: 0
-      m_AllTileFlags: 1073741825
-  - first: {x: 118, y: -1, z: 0}
-    second:
-      serializedVersion: 2
       m_TileIndex: 6
       m_TileSpriteIndex: 6
       m_TileMatrixIndex: 0
@@ -14414,7 +14409,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: e991b6a377a3fa54b81266eda899ca0a, type: 2}
   - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: a26afe6db9b3f0646857d719b288936c, type: 2}
-  - m_RefCount: 79
+  - m_RefCount: 78
     m_Data: {fileID: 11400000, guid: 0f82cb2465d272748ab1a6dee4665f8c, type: 2}
   - m_RefCount: 5
     m_Data: {fileID: 11400000, guid: 84e4ed49ccb2e1a448353499ed189b3b, type: 2}
@@ -14433,7 +14428,7 @@ Tilemap:
     m_Data: {fileID: 21300000, guid: 997ed3176caf2e44c941c6fb9416527a, type: 3}
   - m_RefCount: 5
     m_Data: {fileID: 21300000, guid: fb98997e82d10fd4f8b2055bf086162d, type: 3}
-  - m_RefCount: 79
+  - m_RefCount: 78
     m_Data: {fileID: 21300000, guid: fda5a93fa85ed2e4786d5b388a1e082e, type: 3}
   - m_RefCount: 5
     m_Data: {fileID: 21300000, guid: e7d6fe7eb920aad4db08bf2cfaa34a2d, type: 3}
@@ -14442,7 +14437,7 @@ Tilemap:
   - m_RefCount: 2
     m_Data: {fileID: 21300000, guid: 5fbfdc0692d3449408a62675d76be27b, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 263
+  - m_RefCount: 262
     m_Data:
       e00: 1
       e01: 0
@@ -14461,7 +14456,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 263
+  - m_RefCount: 262
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
@@ -15157,6 +15152,7 @@ MonoBehaviour:
   maxHp: 3
   damageOnHit: 1
   Obstacle: Obstacle
+  invincibleTime: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
