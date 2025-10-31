@@ -24,7 +24,7 @@ public class ScoreManager : MonoBehaviour
     public void AddScore(int amount)
     {
         score += amount;
-        Debug.Log($"ÇöÀç Á¡¼ö:{score}");
+        Debug.Log($"í˜„ì¬ ì ìˆ˜:{score}");
     }
 
     public int GetScore()
@@ -34,6 +34,6 @@ public class ScoreManager : MonoBehaviour
     public void ResetScore()
     {
         score = 0;
-        Debug.Log("Á¡¼ö ÃÊ±âÈ­");
+        Debug.Log("ì ìˆ˜ ì´ˆê¸°í™”");
     }
 }
