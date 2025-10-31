@@ -33,6 +33,10 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float spinDuration = 0.5f;
     [SerializeField] private Vector3 slideOffset = new Vector3(0f, -0.2f, 0f);
 
+    /* 낙사 판정용 필드 */
+    [Header("낙사 판정")]
+    [SerializeField] private float deathY = -5.6f; // 씬에 맞춰 조정
+
 
     private bool isGrounded;
     private bool isSliding;
@@ -68,6 +72,25 @@ public class PlayerMove : MonoBehaviour
         HandleInput();
         HandleAnim();
         HandleSpin();
+
+        /* 낙사 판정: 플레이 중일 때만 체크하도록 GameManager 상태 확인 */
+        if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Playing)
+        {
+            if (transform.position.y <= deathY)
+            {
+                /* PlayerHp가 있으면 KillByFall 호출 (UI/사운드/게임오버 처리 담당) */
+                PlayerHp ph = GetComponent<PlayerHp>();
+                if (ph != null)
+                {
+                    ph.KillByFall();
+                }
+                else
+                {
+                    /* PlayerHp가 없으면 GameManager에 직접 알림 */
+                    GameManager.Instance.GameOver();
+                }
+            }
+        }
     }
 
     private void HandleInput()
