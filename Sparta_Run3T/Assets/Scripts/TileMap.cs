@@ -16,6 +16,9 @@ public class TileMap : MonoBehaviour
 
     int[] nextCullX;
 
+    /* 바닥 타일 스크롤 시작/정지 구분 */
+    private bool isScrolling = true;
+
     void Awake()
     {
         if (!cam) cam = Camera.main;
@@ -29,6 +32,9 @@ public class TileMap : MonoBehaviour
 
     void Update()
     {
+        /* isScrolling == false => 바로 return */
+        if (!isScrolling) return;
+
         transform.Translate(Vector3.left * speed * Time.deltaTime, Space.World);
 
         float leftEdge = cam.ViewportToWorldPoint(new Vector3(0f, 0.5f, 0f)).x - leftCullMargin;
@@ -68,5 +74,40 @@ public class TileMap : MonoBehaviour
             positions[idx++] = new Vector3Int(x, y, 0);
 
         map.SetTiles(positions, tiles);
+    }
+
+
+
+    /* 타일맵 스크롤 시작 */
+    public void StartScroll()
+    {
+        isScrolling = true;
+    }
+
+    /* 타일맵 스크롤 정지 */
+    public void StopScroll()
+    {
+        isScrolling = false;
+    }
+
+    /* 게임 재시작 시 타일맵 리셋 */
+    public void ResetTilemap()
+    {
+        /* 타일맵 위치 초기화 */
+        transform.position = Vector3.zero;
+
+        /* Cull 인덱스 초기화 */
+        for (int i = 0; i < tilemaps.Length; i++)
+        {
+            if (tilemaps[i] != null)
+            {
+                nextCullX[i] = tilemaps[i].cellBounds.xMin;
+            }
+        }
+
+        /* 스크롤 시작 */
+        isScrolling = true;
+
+        Debug.Log("타일맵 리셋 완료!");
     }
 }
