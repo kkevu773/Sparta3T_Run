@@ -38,6 +38,21 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // 씬 로드 이벤트 리스너 등록
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDestroy()
+    {
+        // 이벤트 리스너 제거
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 씬이 로드된 후 매니저 참조들을 다시 찾아서 연결
+        StartCoroutine(ReconnectManagerReferences());
     }
 
     private void Start()
@@ -249,9 +264,9 @@ public class GameManager : MonoBehaviour
     {
         if (currentState != GameState.GameOver) return;
 
-        Debug.Log("=== 게임 재시작 ===");
+        Debug.Log("=== 게임 재시작 - 씬 Reload ===");
 
-        // 1. 씬 내의 모든 게임 오브젝트 정리
+        /*// 1. 씬 내의 모든 게임 오브젝트 정리
         ClearGameObjects();
 
         // 2. 매니저들 리셋
@@ -261,9 +276,32 @@ public class GameManager : MonoBehaviour
         InitGame();
 
         // 4. 바로 게임 시작하려면 이 줄 주석 해제
-        //StartGame();
+        //StartGame();*/
+
+        // 씬 전체 재로드(모든 타일 복구됨!)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    private IEnumerator ReconnectManagerReferences()
+    {
+        // 씬이 완전히 로드될 때까지 한 프레임 대기
+        yield return new WaitForEndOfFrame();
+
+        // 모든 매니저들을 찾아서 다시 연결
+        bgManager = FindObjectOfType<BackgroundManager>();
+        spawnManager = FindObjectOfType<SpawnManager>();
+        scoreManager = FindObjectOfType<ScoreManager>();
+        player = FindObjectOfType<PlayerMove>();
+        obstacleManager = FindObjectOfType<ObstacleManager>();
+        uiManager = FindObjectOfType<UIManager>();
+        audioManager = FindObjectOfType<AudioManager>();
+        tileMap = FindObjectOfType<TileMap>();
+
+        // 게임 초기화 실행
+        InitGame();
+    }
+
+    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
     // 씬 내의 모든 게임 오브젝트 정리
     private void ClearGameObjects()
     {
@@ -280,6 +318,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
     // 모든 매니저 리셋
     private void ResetAllManagers()
     {
