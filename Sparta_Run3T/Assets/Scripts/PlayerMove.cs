@@ -31,7 +31,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
 
     [SerializeField] private float spinDuration = 0.5f;
-    [SerializeField] private Vector3 slideVisualOffset = new Vector3(0f, -0.2f, 0f);
+    [SerializeField] private Vector3 slideOffset = new Vector3(0f, -0.2f, 0f);
 
 
     private bool isGrounded;
@@ -45,7 +45,7 @@ public class PlayerMove : MonoBehaviour
     private float spinStartRZ;
     private bool doubleJumpFX;
 
-    private Vector3 visualDefaultLocalPos;
+    private Vector3 DefaultLocalPos;
 
 
     void Update()
@@ -67,12 +67,11 @@ public class PlayerMove : MonoBehaviour
 
         HandleInput();
         HandleAnim();
-        HandleSpin(); // ▼ 회전 업데이트
+        HandleSpin();
     }
 
     private void HandleInput()
     {
-        // 점프 (Input Manager 말고 인스펙터 키 사용)
         if (Input.GetKeyDown(jumpKey) && !isSliding)
             TryJump();
 
@@ -93,7 +92,7 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
-        visualDefaultLocalPos = sr.transform.localPosition;
+        DefaultLocalPos = sr.transform.localPosition;
     }
     private void TryJump()
     {
@@ -103,6 +102,11 @@ public class PlayerMove : MonoBehaviour
 
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.Play(SoundKey.SFX_PLAYER_JUMP);
+        }
 
         if (isSecondJump)
             StartDoubleJumpFX();
@@ -143,7 +147,6 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
-        // 기본 달리기 A/B 토글
         runTimer += Time.deltaTime;
         if (runTimer >= runFrameTime)
         {
@@ -180,14 +183,14 @@ public class PlayerMove : MonoBehaviour
             bodyCol.size = slideColSize;
             bodyCol.offset = slideColOffset;
 
-            sr.transform.localPosition = visualDefaultLocalPos + slideVisualOffset;
+            sr.transform.localPosition = DefaultLocalPos + slideOffset;
         }
         else
         {
             bodyCol.size = standColSize;
             bodyCol.offset = standColOffset;
 
-            sr.transform.localPosition = visualDefaultLocalPos;
+            sr.transform.localPosition = DefaultLocalPos;
         }
     }
 
