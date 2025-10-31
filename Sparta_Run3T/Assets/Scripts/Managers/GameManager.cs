@@ -414,6 +414,25 @@ public class GameManager : MonoBehaviour
 
             spawnManager.StopSpawning();
         }
+
+        // 이미 스폰된 장애물 / 코인 이동 정지
+        if (obstacleManager != null && obstacleManager.obstaclesParent != null)
+        {
+            var obstacles = obstacleManager.obstaclesParent.GetComponentsInChildren<Obstacle>(true);
+            foreach (var ob in obstacles)
+            {
+                if (ob != null) ob.StopMoving();
+            }
+        }
+
+        if (spawnManager != null && spawnManager.coinsParent != null)
+        {
+            var golds = spawnManager.coinsParent.GetComponentsInChildren<GoldCoin>(true);
+            foreach (var g in golds) if (g != null) g.StopMoving();
+
+            var silvers = spawnManager.coinsParent.GetComponentsInChildren<SliverCoin>(true);
+            foreach (var s in silvers) if (s != null) s.StopMoving();
+        }
     }
 
     // 타이틀 화면으로 돌아가기 (나중에 구현)
