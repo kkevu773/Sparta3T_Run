@@ -4,44 +4,67 @@ using UnityEngine;
 
 public class ObstacleManager : MonoBehaviour
 {
-    public Obstacle obstaclePrefab;
-    public int obstacleCount = 0;
-
-    public float spawnInterval = 2f;
-    public Vector3 startSpawnPos = new Vector3(10f, 0f, 0f);
+    public Transform obstaclesParent;     // 장애물들을 담을 부모 오브젝트 (없으면 null)
+    public float spawnX = 3f;
+    public float minY = -1f;
+    public float maxY = 2f;
+    public float spawnInterval = 0.02f;
+    public float obstacleSpeed = 5f;
 
     private float timer = 0f;
-    private Vector3 lastSpawnPos;
+    private GameObject[] obstaclePrefabs;
 
-    private void Start()
+    void Awake()
     {
-        lastSpawnPos = startSpawnPos;
+        // Resources,Obstacles 폴더 안에 있는 모든 프리팹 로드
+        obstaclePrefabs = Resources.LoadAll<GameObject>("Obstacles");
+
+        if (obstaclePrefabs.Length == 0)
+        {
+            Debug.LogWarning("Resources/Obstacles 폴더에 장애물 프리팹이 없습니다!");
+        }
+        else
+        {
+            Debug.Log($"로드된 장애물 프리팹 수: {obstaclePrefabs.Length}");
+        }
     }
-    private void Update()
+
+    void Update()
     {
         timer += Time.deltaTime;
 
         if (timer >= spawnInterval)
         {
-            SpawnObstacle();
+            SpawnRandomObstacle();
             timer = 0f;
         }
     }
-    private void SpawnObstacle()
+
+    void SpawnRandomObstacle()
     {
-        if (obstaclePrefab == null)
+        if (obstaclePrefabs == null || obstaclePrefabs.Length == 0)
         {
-            Debug.LogWarning("연결되지않음");
+            Debug.LogWarning("장애물 프리팹이 없습니다!");
             return;
         }
-        Vector3 spawnPos = obstaclePrefab.SetRandomPlace(lastSpawnPos, obstacleCount);
 
-        GameObject newObstacle = obstaclePrefab.SpawnRandomObstacle(spawnPos);
-
-        if (newObstacle != null)
+        // null 제외
+        var validPrefabs = System.Array.FindAll(obstaclePrefabs, p => p != null);
+        if (validPrefabs.Length == 0)
         {
-            lastSpawnPos = spawnPos;
-            obstacleCount++;
+            Debug.LogWarning("유효한 장애물이 없습니다!");
+            return;
         }
+
+        int randomIndex = Random.Range(0, validPrefabs.Length);
+        GameObject prefabToSpawn = validPrefabs[randomIndex];
+
+        float randomY = Random.Range(minY, maxY);
+        Vector3 spawnPos = Camera.main.ViewportToWorldPoint(new Vector3(1f, 0.5f, 10f));
+
+        GameObject newObstacle = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity, obstaclesParent);
+        newObstacle.name += "_Spawned"; // Hierarchy에서 구분용
+
+        Debug.Log($"Spawned: {newObstacle.name} at {spawnPos}");
     }
 }
