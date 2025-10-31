@@ -131,4 +131,21 @@ public class PlayerHp : MonoBehaviour
         isInvincible = false;
     }
 
+    /* 외부 (PlayerMove.cs) 에서 낙사로 즉시 사망시키기 위한 메서드 */
+    public void KillByFall()
+    {
+        /* 이미 죽었거나 무적 같은 상태에서 중복 호출 차단 */
+        if (Hp <= 0) return;
+
+        /* 즉시 HP를 0으로 만들고 UI 갱신 */
+        Hp = 0;
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.UpdateHP(Hp, maxHp);
+        }
+
+        /* 사망 처리 */
+        Die();
+    }
+
 }
