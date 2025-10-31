@@ -61,7 +61,7 @@ public class ObstacleManager : MonoBehaviour
 
         float randomY = Random.Range(minY, maxY);
         Vector3 spawnPos = Camera.main.ViewportToWorldPoint(new Vector3(1f, 0.5f, 10f));
-
+        spawnPos.y = randomY;
         GameObject newObstacle = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity, obstaclesParent);
         newObstacle.name += "_Spawned"; // Hierarchy에서 구분용
 
