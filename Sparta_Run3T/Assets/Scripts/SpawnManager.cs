@@ -41,5 +41,33 @@ public class SpawnManager : MonoBehaviour
 
         Instantiate(prefabToSpawn, spawnPos, Quaternion.identity, coinsParent);
     }
+
+
+
+    /* 씬의 모든 코인 제거 */
+    public void ClearAllCoins()
+    {
+        if (coinsParent != null)
+        {
+            /* 부모 오브젝트의 모든 자식 제거 */
+            foreach (Transform child in coinsParent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
+
+    /* 코인 스폰 시작 */
+    public void StartSpawning()
+    {
+        timer = 0f;     /* 타이머 리셋 */
+        enabled = true;  /* Update 활성화 */
+    }
+
+    /* 코인 스폰 정지 */
+    public void StopSpawning()
+    {
+        enabled = false;  /* Update 비활성화 */
+    }
 }
 
