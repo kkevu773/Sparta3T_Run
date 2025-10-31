@@ -45,7 +45,7 @@ public class BackgroundManager : MonoBehaviour
             bg.transform.Translate(Vector2.left * move);
 
         totalMovedDistance += move;
-
+       
         float cameraLeftEdge = mainCam.transform.position.x - (mainCam.orthographicSize * mainCam.aspect);
         GameObject first = activeBackgrounds[0];
         float leftX = first.transform.position.x + backgroundWidth / 2;
@@ -117,5 +117,17 @@ public class BackgroundManager : MonoBehaviour
         }
 
     }
-
+    public void Restart()
+    {
+        Time.timeScale = 0f;
+        currentPrefabsIndex = 0;
+        totalMovedDistance = 0f;
+        SpriteRenderer restartScene = backgroundPrefabs[0].GetComponent<SpriteRenderer>();
+        foreach (var bg in activeBackgrounds)
+        {
+            SpriteRenderer sr = bg.GetComponent<SpriteRenderer>();
+            sr.sprite = restartScene.sprite;
+        }
+        Time.timeScale = 1f;
+    }
 }
