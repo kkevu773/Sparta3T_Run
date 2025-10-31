@@ -638,6 +638,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6836146932579973028}
     m_Modifications:
+    - target: {fileID: 3588458876448928030, guid: aa160cab555735d4abe518a36dfeadd6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 3905886362393838716, guid: aa160cab555735d4abe518a36dfeadd6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.41
@@ -713,6 +717,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 913304821645669332}
     m_Modifications:
+    - target: {fileID: 2963244289559152588, guid: 44eadcba4b97adc4982012794ef8b562, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 5697792625311252564, guid: 44eadcba4b97adc4982012794ef8b562, type: 3}
       propertyPath: m_Name
       value: Goldcoin
@@ -814,6 +822,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4554357127743098037, guid: d31427706f12c314086fbc916d1b6b6a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -849,6 +861,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6836146932579973028}
     m_Modifications:
+    - target: {fileID: 5949131038869364946, guid: 74533fdb28896bf42bdda4741542b77f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 6586873563329446330, guid: 74533fdb28896bf42bdda4741542b77f, type: 3}
       propertyPath: m_Name
       value: Saw
@@ -968,6 +984,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 913304821645669332}
     m_Modifications:
+    - target: {fileID: 2268556562087137378, guid: b4e54c00fa040b449b4579f9e90f502d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 6831699701532758103, guid: b4e54c00fa040b449b4579f9e90f502d, type: 3}
       propertyPath: m_Name
       value: Silvercoin
@@ -1032,6 +1052,10 @@ PrefabInstance:
     - target: {fileID: 4686496482845011977, guid: 25c65e382ec8c154bbe878d55c77b561, type: 3}
       propertyPath: m_Name
       value: Barnacle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6761430429990487788, guid: 25c65e382ec8c154bbe878d55c77b561, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 7030405536985011397, guid: 25c65e382ec8c154bbe878d55c77b561, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1113,6 +1137,10 @@ PrefabInstance:
     - target: {fileID: 4846562127991960769, guid: 5ae36fcc21ade564bb9744a986f7b21d, type: 3}
       propertyPath: m_Name
       value: Bee
+      objectReference: {fileID: 0}
+    - target: {fileID: 8312311774216475986, guid: 5ae36fcc21ade564bb9744a986f7b21d, type: 3}
+      propertyPath: m_SortingOrder
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8491005827725753238, guid: 5ae36fcc21ade564bb9744a986f7b21d, type: 3}
       propertyPath: m_LocalPosition.x
