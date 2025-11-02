@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private AudioManager audioManager;
     [SerializeField] private TileMap tileMap;
+    [SerializeField] private ItemManager itemManager;
 
     [Header("Difficulty Info")]
     [SerializeField] private Difficulty currentDifficulty = Difficulty.Normal;
@@ -38,7 +39,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float difficultySpeedFactor = 1f;       // 난이도에 따른 기본 고정 속도 배율
     public float DifficultySpeedFactor => difficultySpeedFactor;
 
-    public GameState currentState = GameState.Ready;
+    [SerializeField] private float itemSpeedMultiplier = 1f;         // 아이템에 의한 일시적인 속도 배율
+    private Coroutine speedEffectCoroutine;     // 속도 효과 코루틴
+
     [Header("State Info")]
     [SerializeField] private GameState currentState = GameState.Ready;
     public GameState CurrentState => currentState;
@@ -117,15 +120,31 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Playing:
-                // P 키로 점수 테스트 (개발용 - 나중에 삭제)
+                // P 키로 점수 획득 테스트 (개발용 - 나중에 삭제)
                 if (Input.GetKeyDown(KeyCode.P))
                 {
                     AddScore(10);
                 }
+
+                // H 키로 회복 아이템 획득 테스트 (개발용 - 나중에 삭제)
+                if (Input.GetKeyDown(KeyCode.H))
+                {
+                    OnHealItemCollected(1);
+                }
+                // U 키로 속도 증가 아이템 획득 테스트 (개발용 - 나중에 삭제)
+                if (Input.GetKeyDown(KeyCode.U))
+                {
+                    OnSpeedUpItemCollected(1.5f, 5f);
+                }
+                // D 키로 속도 감소 아이템 획득 테스트 (개발용 - 나중에 삭제)
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    OnSpeedDownItemCollected(0.5f, 5f);
+                }
                 break;
 
             case GameState.GameOver:
-                // R 키를 눌러 재시작
+                // R 키를 눌러 재시작 (개발용 - 나중에 삭제)
                 if (Input.GetKeyDown(KeyCode.R))
                 {
                     RestartGame();
@@ -171,6 +190,14 @@ public class GameManager : MonoBehaviour
 
         // 게임 상태를 Ready로 설정
         currentState = GameState.Ready;
+
+        // 속도 초기화
+        itemSpeedMultiplier = 1.0f;
+        if (speedEffectCoroutine != null)
+        {
+            StopCoroutine(speedEffectCoroutine);
+            speedEffectCoroutine = null;
+        }
 
         // 속도 기본값 설정 (Normal)
         if (difficultySpeedFactor == 0f)
@@ -314,6 +341,14 @@ public class GameManager : MonoBehaviour
         // 게임 상태를 GameOver로 변경
         currentState = GameState.GameOver;
 
+        // 속도 증감 효과 중단
+        if (speedEffectCoroutine != null)
+        {
+            StopCoroutine(speedEffectCoroutine);
+            speedEffectCoroutine = null;
+        }
+        itemSpeedMultiplier = 1.0f;
+
         // 최고점 갱신 로직 (현재 점수 비교 후 필요 시 저장)
         SaveBestScoreIfNeeded();
 
@@ -394,6 +429,7 @@ public class GameManager : MonoBehaviour
         uiManager = FindObjectOfType<UIManager>();
         audioManager = FindObjectOfType<AudioManager>();
         tileMap = FindObjectOfType<TileMap>();
+        itemManager = FindObjectOfType<ItemManager>();
 
         // 게임 초기화 실행
         InitGame();
@@ -475,6 +511,13 @@ public class GameManager : MonoBehaviour
             // 타이머 리셋용
             spawnManager.StartSpawning();
         }
+
+        // 아이템 스폰 시작
+        if (itemManager != null)
+        {
+            itemManager.enabled = true;
+            itemManager.StartSpawning();
+        }
     }
 
     // 모든 스폰 매니저 정지
@@ -494,6 +537,13 @@ public class GameManager : MonoBehaviour
             spawnManager.enabled = false;
 
             spawnManager.StopSpawning();
+        }
+
+        // 아이템 스폰 정지
+        if (itemManager != null)
+        {
+            itemManager.enabled = false;
+            itemManager.StopSpawning();
         }
 
         // 이미 스폰된 장애물 / 코인 이동 정지
@@ -563,6 +613,148 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt(BEST_SCORE_KEY, bestScore);
             PlayerPrefs.Save();
             Debug.Log($"새 최고점 저장: {bestScore}");
+        }
+    }
+
+
+    // HP 회복 아이템 획득 처리
+    public void OnHealItemCollected(int healAmount)
+    {
+        if (currentState != GameState.Playing) return;
+
+        // PlayerHp 컴포넌트 찾아서 체력 회복
+        if (player != null)
+        {
+            PlayerHp playerHp = player.GetComponent<PlayerHp>();
+            if (playerHp != null)
+            {
+                playerHp.Heal(healAmount);
+                Debug.Log($"HP 회복 아이템 획득! +{healAmount}");
+            }
+        }
+    }
+
+    // 속도 증가 아이템 획득 처리
+    public void OnSpeedUpItemCollected(float multiplier, float duration)
+    {
+        if (currentState != GameState.Playing) return;
+
+        // 기존 속도 효과 중단
+        if (speedEffectCoroutine != null)
+        {
+            StopCoroutine(speedEffectCoroutine);
+        }
+
+        // 새로운 속도 효과 시작
+        speedEffectCoroutine = StartCoroutine(ApplySpeedEffect(multiplier, duration, true));
+    }
+
+    // 속도 감소 아이템 획득 처리
+    public void OnSpeedDownItemCollected(float multiplier, float duration)
+    {
+        if (currentState != GameState.Playing) return;
+
+        // 기존 속도 효과 중단
+        if (speedEffectCoroutine != null)
+        {
+            StopCoroutine(speedEffectCoroutine);
+        }
+
+        // 새로운 속도 효과 시작 (감소는 역수)
+        speedEffectCoroutine = StartCoroutine(ApplySpeedEffect(multiplier, duration, false));
+    }
+
+    // 속도 효과 적용 코루틴
+    private IEnumerator ApplySpeedEffect(float multiplier, float duration, bool isSpeedUp)
+    {
+        // 속도 적용
+        itemSpeedMultiplier = multiplier;
+        ApplyItemSpeedToAll(multiplier);
+
+        string effectName = isSpeedUp ? "속도 증가" : "속도 감소";
+        Debug.Log($"{effectName} 효과 시작! {multiplier}배, {duration}초");
+
+        // TODO: UI에 버프 아이콘 표시
+
+        // 지속 시간 대기
+        yield return new WaitForSeconds(duration);
+
+        // 원래 속도로 복귀
+        itemSpeedMultiplier = 1f;
+        ApplyItemSpeedToAll(1f);
+
+        Debug.Log($"{effectName} 효과 종료!");
+
+        // TODO: UI 버프 아이콘 제거
+
+        speedEffectCoroutine = null;
+    }
+
+    // 모든 매니저에 난이도 속도 배율 적용
+    private void ApplyDifficultySpeedToAll(float multiplier)
+    {
+        // 배경 속도 변경
+        if (bgManager != null)
+        {
+            bgManager.SetDifficultySpeedMultiplier(multiplier);
+        }
+
+        // 타일맵 속도 변경
+        if (tileMap != null)
+        {
+            tileMap.SetDifficultySpeedMultiplier(multiplier);
+        }
+
+        // 장애물 매니저 속도 변경 (스폰된 장애물들도 자동 적용)
+        if (obstacleManager != null)
+        {
+            obstacleManager.SetDifficultySpeedMultiplier(multiplier);
+        }
+
+        // 코인 매니저 속도 변경 (스폰된 코인들도 자동 적용)
+        if (spawnManager != null)
+        {
+            spawnManager.SetDifficultySpeedMultiplier(multiplier);
+        }
+
+        // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
+        if (itemManager != null)
+        {
+            itemManager.SetDifficultySpeedMultiplier(multiplier);
+        }
+    }
+
+    // 모든 매니저에 아이템 속도 배율 적용
+    private void ApplyItemSpeedToAll(float multiplier)
+    {
+        // 배경 속도 변경
+        if (bgManager != null)
+        {
+            bgManager.SetItemSpeedMultiplier(multiplier);
+        }
+
+        // 타일맵 속도 변경
+        if (tileMap != null)
+        {
+            tileMap.SetItemSpeedMultiplier(multiplier);
+        }
+
+        // 장애물 매니저 속도 변경 (스폰된 장애물들도 자동 적용)
+        if (obstacleManager != null)
+        {
+            obstacleManager.SetItemSpeedMultiplier(multiplier);
+        }
+
+        // 코인 매니저 속도 변경 (스폰된 코인들도 자동 적용)
+        if (spawnManager != null)
+        {
+            spawnManager.SetItemSpeedMultiplier(multiplier);
+        }
+
+        // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
+        if (itemManager != null)
+        {
+            itemManager.SetItemSpeedMultiplier(multiplier);
         }
     }
 }
