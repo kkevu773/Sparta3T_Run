@@ -20,6 +20,18 @@ public class Hp : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            // 체력 회복 GameManager 를 거쳐서 처리
+            if (GameManager.Instance != null)
+            {
+                //GameManager.Instance.OnHpItemCollected(healAmount);
+            }
+
+            // 아이템 획득 효과음
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.Play(SoundKey.SFX_ITEM_PICKUP);
+            }
+            
             Debug.Log("플레이어가 HP 아이템을 획득했습니다!");
             Destroy(gameObject);
         }

@@ -149,4 +149,27 @@ public class PlayerHp : MonoBehaviour
         Die();
     }
 
+    /* 체력 회복 */
+    public void Heal(int amount)
+    {
+        int oldHp = Hp;
+        Hp = Mathf.Min(Hp + amount, maxHp);  /* 최대 체력 초과 안 되게 */
+
+        int actualHeal = Hp - oldHp;
+
+        if (actualHeal > 0)
+        {
+            Debug.Log($"체력 회복! {oldHp} → {Hp} (+{actualHeal})");
+
+            /* UI 업데이트 */
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.UpdateHP(Hp, maxHp);
+            }
+        }
+        else
+        {
+            Debug.Log("체력이 이미 최대치입니다!");
+        }
+    }
 }
