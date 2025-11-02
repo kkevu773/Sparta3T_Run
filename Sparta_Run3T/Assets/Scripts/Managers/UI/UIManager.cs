@@ -30,6 +30,21 @@ public class UIManager : MonoBehaviour
     public Button btnTit;
     public Button btnBack;
 
+    [Header("슬라이더")]
+    public Slider sliderBGM;
+    public Slider sliderSFX;
+
+    [Header("결과창")]
+    public GameObject panelGameOver;
+    public TextMeshProUGUI textScore;
+    public TextMeshProUGUI textBestScore;
+    public TextMeshProUGUI textNewRecord;
+    public Button btnRetry;
+    public Button btnTitle;
+
+    private int currentScore;
+    private int bestScore;
+
     private bool paused = false;
     public bool IsPaused => paused;
 
@@ -60,17 +75,91 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        if (btnSet != null) btnSet.onClick.AddListener(ToggleSet);
-        if (btnBack != null) btnBack.onClick.AddListener(CloseSet);
-        if (btnTit != null) btnTit.onClick.AddListener(GoTitle);
+        if (btnSet != null)
+        {
+            btnSet.onClick.AddListener(() =>
+            {
+                AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+                ToggleSet();
+            });
+        }
+        if (btnBack != null)
+        {
+            btnBack.onClick.AddListener(() =>
+            {
+                AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+                CloseSet();
+            });
+        }
+        if (btnTit != null)
+        {
+            btnTit.onClick.AddListener(() =>
+            {
+                AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+                GoTitle();
+            });
+        }
         if (panelSet != null)
         {
             panelSet.SetActive(false);
         }
+        if (sliderBGM != null)
+        {
+            sliderBGM.value = 1f;
+            sliderBGM.onValueChanged.AddListener(BGMChange);
+        }
+        if (sliderSFX != null)
+        {
+            sliderSFX.value = 1f;
+            sliderSFX.onValueChanged.AddListener(SFXChange);
+        }
         Time.timeScale = 1f;
     }
 
-    private void ToggleSet()
+    public void ShowGameOver(int score)
+    {
+        if (panelGameOver == null)
+        {
+            return;
+        }
+
+        panelGameOver.SetActive(true);
+        Time.timeScale = 0f;
+
+        currentScore = score;
+        textScore.text = $"Score: {score}";
+
+        if (score > bestScore)
+        {
+            bestScore = score;
+            textBestScore.gameObject.SetActive(false);
+            textNewRecord.gameObject.SetActive(true);
+            textNewRecord.text = $"NEW RECORD: {bestScore}";
+        }
+        else
+        {
+            textBestScore.gameObject.SetActive(true);
+            textBestScore.text = $"Best: {bestScore}";
+            textNewRecord.gameObject.SetActive(false);
+        }
+    }
+    public void RetryGame()
+    {
+        AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    private void BGMChange(float value)
+    {
+        AudioManager.instance.SetBGMVolume(value);
+    }
+
+    private void SFXChange(float value)
+    {
+        AudioManager.instance.SetSFXVolume(value);
+    }
+
+    public void ToggleSet()
     {
         paused = !paused;
         if (panelSet != null)
@@ -81,7 +170,7 @@ public class UIManager : MonoBehaviour
         if (EventSystem.current != null)
             EventSystem.current.SetSelectedGameObject(null);
     }
-    private void CloseSet()
+    public void CloseSet()
     {
         paused = false;
         if (panelSet != null)
@@ -93,7 +182,7 @@ public class UIManager : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
     }
 
-    private void GoTitle()
+    public void GoTitle()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("TitleScene");
@@ -108,6 +197,15 @@ public class UIManager : MonoBehaviour
         {
             go.SetActive(show);
         }
+    }
+    public void GoGame()
+    {
+        SceneManager.LoadScene("GameScene");
+    }
+    public void QuitGame()
+    {
+        AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+        UnityEditor.EditorApplication.isPlaying = false;
     }
 
     public void UpdateScore(int score)

@@ -51,7 +51,26 @@ public class AudioManager : MonoBehaviour
         }
         if (soundDic.TryGetValue(key, out AudioSource src))
         {
-            src.Play();
+            if (!src.isPlaying)
+            {
+                var sound = src.GetComponent<SoundInstace>();
+                if (sound != null)
+                {
+                    sound.PlayWithSettings();
+                }
+                else
+                {
+                    src.Play();
+                }
+            }
+        }
+    }
+
+    public void PlayOneShot(SoundKey key)
+    {
+        if(soundDic.TryGetValue(key, out AudioSource src))
+        {
+            src.PlayOneShot(src.clip);
         }
     }
 
@@ -86,8 +105,39 @@ public class AudioManager : MonoBehaviour
             src.Stop();
         }
     }
-    
-        
+
+    public void SetVolumeAll(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        foreach (var pair in soundDic)
+        {
+            pair.Value.volume = volume;
+        }
+    }
+    public void SetBGMVolume(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        foreach (var pair in soundDic)
+        {
+            if (pair.Key.ToString().StartsWith("BGM"))
+            {
+                pair.Value.volume = volume;
+            }
+        }
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        foreach (var pair in soundDic)
+        {
+            if (!pair.Key.ToString().StartsWith("BGM"))
+            {
+                pair.Value.volume = volume;
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
