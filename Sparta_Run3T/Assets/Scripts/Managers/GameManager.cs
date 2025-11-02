@@ -10,6 +10,14 @@ public enum GameState
     GameOver    // 게임 오버
 }
 
+// 게임 난이도
+public enum Difficulty
+{
+    Easy,       // 쉬움 (0.8배속)
+    Normal,     // 보통 (1배속)
+    Hard        // 어려움 (1.2배속)
+}
+
 public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
@@ -22,10 +30,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioManager audioManager;
     [SerializeField] private TileMap tileMap;
 
-    public static GameManager Instance { get; private set; }
+    [Header("Difficulty Info")]
+    [SerializeField] private Difficulty currentDifficulty = Difficulty.Normal;
+    public Difficulty CurrentDifficulty => currentDifficulty;
+
+    [Header("Speed Info")]
+    [SerializeField] private float difficultySpeedFactor = 1f;       // 난이도에 따른 기본 고정 속도 배율
+    public float DifficultySpeedFactor => difficultySpeedFactor;
 
     public GameState currentState = GameState.Ready;
+    [Header("State Info")]
+    [SerializeField] private GameState currentState = GameState.Ready;
     public GameState CurrentState => currentState;
+
+    public static GameManager Instance { get; private set; }
 
     // PlayerPrefs 호출용 key string
     private const string BEST_SCORE_KEY = "BestScore";
@@ -82,6 +100,20 @@ public class GameManager : MonoBehaviour
                 {
                     StartGame();
                 }
+
+                // 난이도 설정 테스트용 (개발용 - 나중에 삭제)
+                if (Input.GetKeyDown(KeyCode.Alpha1))   // 숫자 1 키
+                {
+                    SetDifficulty(Difficulty.Easy);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha2))   // 숫자 2 키
+                {
+                    SetDifficulty(Difficulty.Normal);
+                }
+                if (Input.GetKeyDown(KeyCode.Alpha3))   // 숫자 3 키
+                {
+                    SetDifficulty(Difficulty.Hard);
+                }
                 break;
 
             case GameState.Playing:
@@ -102,6 +134,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 게임 시작 전, 난이도 설정
+    public void SetDifficulty(Difficulty difficulty)
+    {
+        if (currentState != GameState.Ready)
+        {
+            Debug.LogWarning("난이도 설정은 게임 시작 전에만 가능합니다!!!");
+            return;
+        }
+
+        currentDifficulty = difficulty;
+
+        // 난이도에 따른 속도 배율 설정
+        switch (difficulty)
+        {
+            case Difficulty.Easy:
+                difficultySpeedFactor = 0.7f;
+                break;
+            case Difficulty.Normal:
+                difficultySpeedFactor = 1.0f;
+                break;
+            case Difficulty.Hard:
+                difficultySpeedFactor = 1.3f;
+                break;
+        }
+
+        Debug.Log($"난이도 설정 완료 : {currentDifficulty} ({difficultySpeedFactor}배속)");
+
+        // TODO: UI에 선택된 난이도 표시
+    }
+
     // 게임 초기화 (첫 실행 시)
     public void InitGame()
     {
@@ -109,6 +171,12 @@ public class GameManager : MonoBehaviour
 
         // 게임 상태를 Ready로 설정
         currentState = GameState.Ready;
+
+        // 속도 기본값 설정 (Normal)
+        if (difficultySpeedFactor == 0f)
+        {
+            SetDifficulty(Difficulty.Normal);
+        }
 
         // 점수 초기화
         if (scoreManager != null)
@@ -136,6 +204,9 @@ public class GameManager : MonoBehaviour
 
             // Title UI 숨기기 (혹시 켜져있다면)
             uiManager.ShowUI(UIKey.UI_TITLEL_PANEL, false);
+
+            // TODO: 난이도 선택 UI 표시
+            // uiManager.ShowUI(UIKey.UI_DIFFICULTY_PANEL, true);
         }
 
         // BGM 재생
@@ -177,6 +248,15 @@ public class GameManager : MonoBehaviour
 
         // 게임 상태를 Playing으로 변경
         currentState = GameState.Playing;
+
+        // TODO: 난이도 선택 UI 숨기기
+        // if (uiManager != null)
+        // {
+        //     uiManager.ShowUI(UIKey.UI_DIFFICULTY_PANEL, false);
+        // }
+
+        // 모든 매니저에 난이도 기반 속도 적용
+        ApplyDifficultySpeedToAll(difficultySpeedFactor);
 
         // 모든 스폰 매니저 활성화
         StartAllSpawners();
@@ -299,6 +379,7 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    // 씬 재로드 후, 모든 매니저 재연결
     private IEnumerator ReconnectManagerReferences()
     {
         // 씬이 완전히 로드될 때까지 한 프레임 대기
