@@ -35,9 +35,9 @@ public class SliverCoin : MonoBehaviour
         }
 
         /* 코인 획득 사운드 */
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.Play(SoundKey.SFX_ITEM_COIN);
+            AudioManager.Instance.Play(SoundKey.SFX_ITEM_COIN);
         }
 
         Destroy(gameObject);

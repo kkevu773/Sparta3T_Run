@@ -267,6 +267,7 @@ public class GameManager : MonoBehaviour
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_PANEL, true);
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_RETRY_BUTTON, true);
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, true);
+            uiManager.ShowGameOver(scoreManager != null ? scoreManager.GetScore() : 0);
         }
 
         // 게임오버 사운드 재생

@@ -13,7 +13,7 @@ public struct SoundPair
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance { get; private set; }
+    public static AudioManager Instance { get; private set; }
 
     [Header("사운드 키 목록")]
     public SoundPair[] soundPairs;
@@ -23,9 +23,9 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -49,20 +49,10 @@ public class AudioManager : MonoBehaviour
         {
             return;
         }
+
         if (soundDic.TryGetValue(key, out AudioSource src))
         {
-            if (!src.isPlaying)
-            {
-                var sound = src.GetComponent<SoundInstace>();
-                if (sound != null)
-                {
-                    sound.PlayWithSettings();
-                }
-                else
-                {
-                    src.Play();
-                }
-            }
+            src.PlayOneShot(src.clip, src.volume);
         }
     }
 
@@ -70,7 +60,8 @@ public class AudioManager : MonoBehaviour
     {
         if(soundDic.TryGetValue(key, out AudioSource src))
         {
-            src.PlayOneShot(src.clip);
+            float volume = src.volume;
+            src.PlayOneShot(src.clip, volume);
         }
     }
 
@@ -131,7 +122,9 @@ public class AudioManager : MonoBehaviour
         volume = Mathf.Clamp01(volume);
         foreach (var pair in soundDic)
         {
-            if (!pair.Key.ToString().StartsWith("BGM"))
+            string keyName = pair.Key.ToString();
+
+            if (!keyName.StartsWith("BGM"))
             {
                 pair.Value.volume = volume;
             }

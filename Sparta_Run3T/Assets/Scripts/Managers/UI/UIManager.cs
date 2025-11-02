@@ -73,13 +73,15 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return null;
+
         if (btnSet != null)
         {
             btnSet.onClick.AddListener(() =>
             {
-                AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+                AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
                 ToggleSet();
             });
         }
@@ -87,7 +89,7 @@ public class UIManager : MonoBehaviour
         {
             btnBack.onClick.AddListener(() =>
             {
-                AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+                AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
                 CloseSet();
             });
         }
@@ -95,7 +97,7 @@ public class UIManager : MonoBehaviour
         {
             btnTit.onClick.AddListener(() =>
             {
-                AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+                AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
                 GoTitle();
             });
         }
@@ -145,18 +147,22 @@ public class UIManager : MonoBehaviour
     }
     public void RetryGame()
     {
-        AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+        AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
+        if (panelGameOver != null)
+        {
+            panelGameOver.SetActive(false);
+        }
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     private void BGMChange(float value)
     {
-        AudioManager.instance.SetBGMVolume(value);
+        AudioManager.Instance.SetBGMVolume(value);
     }
 
     private void SFXChange(float value)
     {
-        AudioManager.instance.SetSFXVolume(value);
+        AudioManager.Instance.SetSFXVolume(value);
     }
 
     public void ToggleSet()
@@ -200,11 +206,11 @@ public class UIManager : MonoBehaviour
     }
     public void GoGame()
     {
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("ParkScene");
     }
     public void QuitGame()
     {
-        AudioManager.instance.Play(SoundKey.SFX_UI_UICLICK);
+        AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
         UnityEditor.EditorApplication.isPlaying = false;
     }
 

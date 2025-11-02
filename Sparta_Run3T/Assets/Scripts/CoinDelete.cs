@@ -27,12 +27,12 @@ public class CoinDelete : MonoBehaviour
         var map = other.GetComponent<Tilemap>();
         if (map == null) return;
 
-        if (map == bronzeMap) CollectOverlappedCells(map/*, bronzeValue*/);
-        else if (map == silverMap) CollectOverlappedCells(map/*, silverValue*/);
-        else if (map == goldMap) CollectOverlappedCells(map/*, goldValue*/);
+        if (map == bronzeMap) CollectOverlappedCells(map, bronzeValue);
+        else if (map == silverMap) CollectOverlappedCells(map, silverValue);
+        else if (map == goldMap) CollectOverlappedCells(map, goldValue);
     }
 
-    void CollectOverlappedCells(Tilemap map/*, int value*/)
+    void CollectOverlappedCells(Tilemap map, int value)
     {
         var b = col.bounds;
         Vector3Int min = map.WorldToCell(b.min);
@@ -46,7 +46,17 @@ public class CoinDelete : MonoBehaviour
 
                 // TODO: 점수/VFX/사운드
                 // Score.Add(value);
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.AddScore(value);
+                }
                 // Instantiate(vfx, map.GetCellCenterWorld(cell), Quaternion.identity);
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayOneShot(SoundKey.SFX_ITEM_COIN);
+                }
+
+                EffectManager.Instance?.Play(EffectKey.ITEM_COIN, map.GetCellCenterWorld(cell));
 
                 map.SetTile(cell, null); // 해당 코인 타일 삭제=획득
             }

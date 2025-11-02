@@ -34,9 +34,9 @@ public class GoldCoin : MonoBehaviour
         }
 
         /* 코인 획득 사운드 */
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.Play(SoundKey.SFX_ITEM_COIN);
+            AudioManager.Instance.PlayOneShot(SoundKey.SFX_ITEM_COIN);
         }
 
         Destroy(gameObject);   //코인 제거
