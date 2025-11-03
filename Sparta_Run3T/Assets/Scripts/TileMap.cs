@@ -5,12 +5,10 @@ using UnityEngine.Tilemaps;
 
 public class TileMap : MonoBehaviour
 {
-    [Header("Scroll")]
     public float speed = 6f;          // 이동 속도
     public Camera cam;
     public float leftCullMargin = 2f;
 
-    [Header("Targets")]
     public Tilemap[] tilemaps;
     public bool destroyEmptyTilemapGO = false;
 
@@ -20,7 +18,6 @@ public class TileMap : MonoBehaviour
     private bool isScrolling = true;
 
     /* 난이도, 아이템별 속도 조절용 */
-    [Header("Speed Settings")]
     [SerializeField] private float difficultySpeedMultiplier = 1.0f;
     [SerializeField] private float itemSpeedMultiplier = 1.0f;
 
