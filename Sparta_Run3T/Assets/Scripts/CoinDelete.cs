@@ -44,13 +44,11 @@ public class CoinDelete : MonoBehaviour
                 var cell = new Vector3Int(x, y, 0);
                 if (!map.HasTile(cell)) continue;
 
-                // TODO: 점수/VFX/사운드
-                // Score.Add(value);
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.AddScore(value);
                 }
-                // Instantiate(vfx, map.GetCellCenterWorld(cell), Quaternion.identity);
+
                 if (AudioManager.Instance != null)
                 {
                     AudioManager.Instance.PlayOneShot(SoundKey.SFX_ITEM_COIN);
