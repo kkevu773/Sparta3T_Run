@@ -231,7 +231,6 @@ public class GameManager : MonoBehaviour
 
             // Title UI 숨기기 (혹시 켜져있다면)
             uiManager.ShowUI(UIKey.UI_TITLE_PANEL, false);
-            uiManager.ShowUI(UIKey.UI_TITLEL_PANEL, false);
 
             // TODO: 난이도 선택 UI 표시
             // uiManager.ShowUI(UIKey.UI_DIFFICULTY_PANEL, true);
