@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/ParkScene.unity
     guid: db73cbb334d32da4595e3f059900032e
   - enabled: 1
-    path: Assets/Scenes/AraScene.unity
+    path: Assets/Scenes/GameScene.unity
     guid: 2ef1693ad7085cd4aa844f671af20ece
   m_configObjects: {}

@@ -31,7 +31,6 @@ public class EffectManager : MonoBehaviour
             }
         }
     }
-
     public void Play(EffectKey key, Vector3 pos)
     {
         if (key == EffectKey.None)
@@ -71,17 +70,5 @@ public class EffectManager : MonoBehaviour
         {
             instance.SetActive(false);
         }
-    }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

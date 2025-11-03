@@ -31,5 +31,4 @@ public enum SoundKey
     BGM_RESULT,
     BGM_BUFF,
     #endregion
-
 }

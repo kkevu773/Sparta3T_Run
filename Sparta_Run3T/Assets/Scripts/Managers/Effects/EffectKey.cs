@@ -26,6 +26,4 @@ public enum EffectKey
     HIT_OBSTACLE,
     HIT_DAMAGE,
     #endregion
-
-
 }
