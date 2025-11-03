@@ -145,7 +145,7 @@ public class UIManager : MonoBehaviour
     {
         AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
         GameManager.Instance?.SetDifficulty(diff);
-        SceneManager.LoadScene("AraScene");
+        SceneManager.LoadScene("GameScene");
     }
 
     public void ShowDifficultyPanel(bool show)
@@ -290,7 +290,7 @@ public class UIManager : MonoBehaviour
             panelDifficulty.SetActive(false);
         }
 
-        SceneManager.LoadScene("AraScene");
+        SceneManager.LoadScene("GameScene");
     }
     public void GoGame()
     {
