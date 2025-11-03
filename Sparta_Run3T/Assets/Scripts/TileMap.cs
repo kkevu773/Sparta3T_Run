@@ -14,7 +14,6 @@ public class TileMap : MonoBehaviour
 
     int[] nextCullX;
 
-    /* 바닥 타일 스크롤 시작/정지 구분 */
     private bool isScrolling = true;
 
     /* 난이도, 아이템별 속도 조절용 */
