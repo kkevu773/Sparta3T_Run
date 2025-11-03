@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
     [SerializeField] private BackgroundManager bgManager;
-    //[SerializeField] private SpawnManager spawnManager;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private PlayerMove player;
     [SerializeField] private ObstacleManager obstacleManager;
@@ -180,8 +179,6 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log($"난이도 설정 완료 : {currentDifficulty} ({difficultySpeedFactor}배속)");
-
-        // TODO: UI에 선택된 난이도 표시
     }
 
     // 게임 초기화 (첫 실행 시)
@@ -232,9 +229,6 @@ public class GameManager : MonoBehaviour
 
             // Title UI 숨기기 (혹시 켜져있다면)
             uiManager.ShowUI(UIKey.UI_TITLE_PANEL, false);
-
-            // TODO: 난이도 선택 UI 표시
-            // uiManager.ShowUI(UIKey.UI_DIFFICULTY_PANEL, true);
         }
 
         // BGM 재생
@@ -276,12 +270,6 @@ public class GameManager : MonoBehaviour
 
         // 게임 상태를 Playing으로 변경
         currentState = GameState.Playing;
-
-        // TODO: 난이도 선택 UI 숨기기
-        // if (uiManager != null)
-        // {
-        //     uiManager.ShowUI(UIKey.UI_DIFFICULTY_PANEL, false);
-        // }
 
         // 모든 매니저에 난이도 기반 속도 적용
         ApplyDifficultySpeedToAll(difficultySpeedFactor);
@@ -400,18 +388,6 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("=== 게임 재시작 - 씬 Reload ===");
 
-        /*// 1. 씬 내의 모든 게임 오브젝트 정리
-        ClearGameObjects();
-
-        // 2. 매니저들 리셋
-        ResetAllManagers();
-
-        // 3. 게임 재초기화 (Ready 상태로)
-        InitGame();
-
-        // 4. 바로 게임 시작하려면 이 줄 주석 해제
-        //StartGame();*/
-
         // 씬 전체 재로드(모든 타일 복구됨!)
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -424,7 +400,6 @@ public class GameManager : MonoBehaviour
 
         // 모든 매니저들을 찾아서 다시 연결
         bgManager = FindObjectOfType<BackgroundManager>();
-        //spawnManager = FindObjectOfType<SpawnManager>();
         scoreManager = FindObjectOfType<ScoreManager>();
         player = FindObjectOfType<PlayerMove>();
         obstacleManager = FindObjectOfType<ObstacleManager>();
@@ -435,61 +410,12 @@ public class GameManager : MonoBehaviour
 
         // 게임 초기화 실행
         InitGame();
-    }
 
-    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
-    // 씬 내의 모든 게임 오브젝트 정리
-    private void ClearGameObjects()
-    {
-        // 장애물 전부 제거
-        if (obstacleManager != null)
+        // GameScene이고 난이도가 이미 설정되어 있으면 자동으로 게임 시작
+        if (sceneName == "GameScene" && difficultySpeedFactor > 0f)
         {
-            obstacleManager.ClearAllObstacles();
-        }
-
-        /*// 코인 전부 제거
-        if (spawnManager != null)
-        {
-            spawnManager.ClearAllCoins();
-        }*/
-    }
-
-
-    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
-    // 모든 매니저 리셋
-    private void ResetAllManagers()
-    {
-        // 플레이어 리셋
-        if (player != null)
-        {
-            player.ResetPlayer();
-        }
-
-        // 배경 리셋
-        if (bgManager != null)
-        {
-            bgManager.ResetBackground();
-        }
-
-        // 타일맵 리셋
-        if (tileMap != null)
-        {
-            tileMap.ResetTilemap();
-        }
-
-        // 점수 리셋
-        if (scoreManager != null)
-        {
-            scoreManager.ResetScore();
-        }
-
-        // UI 리셋
-        if (uiManager != null)
-        {
-            uiManager.UpdateScore(0);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_PANEL, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_RETRY_BUTTON, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
+            yield return new WaitForEndOfFrame(); // 한 프레임 더 대기 (매니저 초기화 완료 대기)
+            StartGame();
         }
     }
 
@@ -504,15 +430,6 @@ public class GameManager : MonoBehaviour
             // 타이머 리셋용
             obstacleManager.StartSpawning();
         }
-
-        /*// 코인 스폰 시작
-        if (spawnManager != null)
-        {
-            spawnManager.enabled = true;
-
-            // 타이머 리셋용
-            spawnManager.StartSpawning();
-        }*/
 
         // 아이템 스폰 시작
         if (itemManager != null)
@@ -533,14 +450,6 @@ public class GameManager : MonoBehaviour
             obstacleManager.StopSpawning();
         }
 
-        /*// 코인 스폰 정지
-        if (spawnManager != null)
-        {
-            spawnManager.enabled = false;
-
-            spawnManager.StopSpawning();
-        }*/
-
         // 아이템 스폰 정지
         if (itemManager != null)
         {
@@ -557,44 +466,6 @@ public class GameManager : MonoBehaviour
                 if (ob != null) ob.StopMoving();
             }
         }
-
-        /*if (spawnManager != null && spawnManager.coinsParent != null)
-        {
-            var golds = spawnManager.coinsParent.GetComponentsInChildren<GoldCoin>(true);
-            foreach (var g in golds) if (g != null) g.StopMoving();
-
-            var silvers = spawnManager.coinsParent.GetComponentsInChildren<SliverCoin>(true);
-            foreach (var s in silvers) if (s != null) s.StopMoving();
-        }*/
-    }
-
-    // 타이틀 화면으로 돌아가기 (나중에 구현)
-    public void GoToTitle()
-    {
-        Debug.Log("타이틀 화면으로 이동 (미구현)");
-
-        // 모든 스폰 정지
-        StopAllSpawners();
-
-        // UI 전환
-        if (uiManager != null)
-        {
-            // 모든 UI 숨기기
-            uiManager.ShowUI(UIKey.UI_HUD_SCORE_TEXT, false);
-            uiManager.ShowUI(UIKey.UI_HUD_BESTSCORE_TEXT, false);
-            uiManager.ShowUI(UIKey.UI_HUD_HP_BAR, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_PANEL, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_RETRY_BUTTON, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
-
-            // 타이틀 UI 보이기
-            uiManager.ShowUI(UIKey.UI_TITLE_PANEL, true);
-        }
-
-        // BGM 변경 (타이틀 BGM이 있다면)
-        // audioManager?.PlayBGM(SoundKey.BGM_TITLE);
-
-        currentState = GameState.Ready;
     }
 
     // PlayerPrefs 관련: 최고점 불러오기
@@ -617,7 +488,6 @@ public class GameManager : MonoBehaviour
             Debug.Log($"새 최고점 저장: {bestScore}");
         }
     }
-
 
     // HP 회복 아이템 획득 처리
     public void OnHealItemCollected(int healAmount)
@@ -679,8 +549,6 @@ public class GameManager : MonoBehaviour
         string effectName = isSpeedUp ? "속도 증가" : "속도 감소";
         Debug.Log($"{effectName} 효과 시작! {multiplier}배, {duration}초");
 
-        // TODO: UI에 버프 아이콘 표시
-
         // 지속 시간 대기
         yield return new WaitForSeconds(duration);
 
@@ -689,8 +557,6 @@ public class GameManager : MonoBehaviour
         ApplyItemSpeedToAll(1f);
 
         Debug.Log($"{effectName} 효과 종료!");
-
-        // TODO: UI 버프 아이콘 제거
 
         speedEffectCoroutine = null;
     }
@@ -716,13 +582,6 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetDifficultySpeedMultiplier(multiplier);
             obstacleManager.SetAllObstaclesDifficultySpeed(multiplier);
         }
-
-        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
-        if (spawnManager != null)
-        {
-            spawnManager.SetDifficultySpeedMultiplier(multiplier);
-            spawnManager.SetAllCoinsDifficultySpeed(multiplier);
-        }*/
 
         // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)
@@ -753,13 +612,6 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetItemSpeedMultiplier(multiplier);
             obstacleManager.SetAllObstaclesItemSpeed(multiplier);
         }
-
-        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
-        if (spawnManager != null)
-        {
-            spawnManager.SetItemSpeedMultiplier(multiplier);
-            spawnManager.SetAllCoinsItemSpeed(multiplier);
-        }*/
 
         // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)
