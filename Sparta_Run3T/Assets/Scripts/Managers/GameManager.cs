@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
     [SerializeField] private BackgroundManager bgManager;
-    [SerializeField] private SpawnManager spawnManager;
+    //[SerializeField] private SpawnManager spawnManager;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private PlayerMove player;
     [SerializeField] private ObstacleManager obstacleManager;
@@ -78,8 +78,9 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 씬이 로드된 후 매니저 참조들을 다시 찾아서 연결
+
         StartCoroutine(ReconnectManagerReferences());
+
     }
 
     private void Start()
@@ -139,7 +140,7 @@ public class GameManager : MonoBehaviour
                 // D 키로 속도 감소 아이템 획득 테스트 (개발용 - 나중에 삭제)
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    OnSpeedDownItemCollected(0.5f, 5f);
+                    OnSpeedDownItemCollected(2f, 5f);
                 }
                 break;
 
@@ -423,7 +424,7 @@ public class GameManager : MonoBehaviour
 
         // 모든 매니저들을 찾아서 다시 연결
         bgManager = FindObjectOfType<BackgroundManager>();
-        spawnManager = FindObjectOfType<SpawnManager>();
+        //spawnManager = FindObjectOfType<SpawnManager>();
         scoreManager = FindObjectOfType<ScoreManager>();
         player = FindObjectOfType<PlayerMove>();
         obstacleManager = FindObjectOfType<ObstacleManager>();
@@ -446,11 +447,11 @@ public class GameManager : MonoBehaviour
             obstacleManager.ClearAllObstacles();
         }
 
-        // 코인 전부 제거
+        /*// 코인 전부 제거
         if (spawnManager != null)
         {
             spawnManager.ClearAllCoins();
-        }
+        }*/
     }
 
 
@@ -504,14 +505,14 @@ public class GameManager : MonoBehaviour
             obstacleManager.StartSpawning();
         }
 
-        // 코인 스폰 시작
+        /*// 코인 스폰 시작
         if (spawnManager != null)
         {
             spawnManager.enabled = true;
 
             // 타이머 리셋용
             spawnManager.StartSpawning();
-        }
+        }*/
 
         // 아이템 스폰 시작
         if (itemManager != null)
@@ -532,13 +533,13 @@ public class GameManager : MonoBehaviour
             obstacleManager.StopSpawning();
         }
 
-        // 코인 스폰 정지
+        /*// 코인 스폰 정지
         if (spawnManager != null)
         {
             spawnManager.enabled = false;
 
             spawnManager.StopSpawning();
-        }
+        }*/
 
         // 아이템 스폰 정지
         if (itemManager != null)
@@ -557,14 +558,14 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (spawnManager != null && spawnManager.coinsParent != null)
+        /*if (spawnManager != null && spawnManager.coinsParent != null)
         {
             var golds = spawnManager.coinsParent.GetComponentsInChildren<GoldCoin>(true);
             foreach (var g in golds) if (g != null) g.StopMoving();
 
             var silvers = spawnManager.coinsParent.GetComponentsInChildren<SliverCoin>(true);
             foreach (var s in silvers) if (s != null) s.StopMoving();
-        }
+        }*/
     }
 
     // 타이틀 화면으로 돌아가기 (나중에 구현)
@@ -661,8 +662,11 @@ public class GameManager : MonoBehaviour
             StopCoroutine(speedEffectCoroutine);
         }
 
-        // 새로운 속도 효과 시작 (감소는 역수)
-        speedEffectCoroutine = StartCoroutine(ApplySpeedEffect(multiplier, duration, false));
+        // 속도 감소는 역수로 계산 (예: 2f → 0.5f, 속도를 절반으로)
+        float speedDownMultiplier = 1f / multiplier;
+
+        // 새로운 속도 효과 시작
+        speedEffectCoroutine = StartCoroutine(ApplySpeedEffect(speedDownMultiplier, duration, false));
     }
 
     // 속도 효과 적용 코루틴
@@ -706,22 +710,25 @@ public class GameManager : MonoBehaviour
             tileMap.SetDifficultySpeedMultiplier(multiplier);
         }
 
-        // 장애물 매니저 속도 변경 (스폰된 장애물들도 자동 적용)
+        // 장애물 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 장애물들도 실시간 적용)
         if (obstacleManager != null)
         {
             obstacleManager.SetDifficultySpeedMultiplier(multiplier);
+            obstacleManager.SetAllObstaclesDifficultySpeed(multiplier);
         }
 
-        // 코인 매니저 속도 변경 (스폰된 코인들도 자동 적용)
+        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
         if (spawnManager != null)
         {
             spawnManager.SetDifficultySpeedMultiplier(multiplier);
-        }
+            spawnManager.SetAllCoinsDifficultySpeed(multiplier);
+        }*/
 
-        // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
+        // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)
         {
             itemManager.SetDifficultySpeedMultiplier(multiplier);
+            itemManager.SetAllItemsDifficultySpeed(multiplier);
         }
     }
 
@@ -740,22 +747,57 @@ public class GameManager : MonoBehaviour
             tileMap.SetItemSpeedMultiplier(multiplier);
         }
 
-        // 장애물 매니저 속도 변경 (스폰된 장애물들도 자동 적용)
+        // 장애물 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 장애물들도 실시간 적용)
         if (obstacleManager != null)
         {
             obstacleManager.SetItemSpeedMultiplier(multiplier);
+            obstacleManager.SetAllObstaclesItemSpeed(multiplier);
         }
 
-        // 코인 매니저 속도 변경 (스폰된 코인들도 자동 적용)
+        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
         if (spawnManager != null)
         {
             spawnManager.SetItemSpeedMultiplier(multiplier);
-        }
+            spawnManager.SetAllCoinsItemSpeed(multiplier);
+        }*/
 
-        // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
+        // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)
         {
             itemManager.SetItemSpeedMultiplier(multiplier);
+            itemManager.SetAllItemsItemSpeed(multiplier);
         }
+    }
+    public void GameClear()
+    {
+        if (currentState != GameState.Playing)
+        {
+            return;
+        }
+
+        Debug.Log("게임 클리어");
+        currentState = GameState.GameOver;
+
+        StopAllSpawners();
+        if (bgManager != null)
+        {
+            bgManager.StopScroll();
+        }
+        if (tileMap != null)
+        {
+            tileMap.StopScroll();
+        }
+        if (player != null)
+        {
+            player.StopPlaying();
+        }
+
+        SaveBestScoreIfNeeded();
+        if (uiManager != null)
+        {
+            uiManager.ShowGameOver(scoreManager != null ? scoreManager.GetScore() : 0);
+        }
+
+        AudioManager.Instance.Play(SoundKey.SFX_UI_GAMEOVER);
     }
 }

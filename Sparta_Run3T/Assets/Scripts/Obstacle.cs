@@ -85,14 +85,13 @@ public class Obstacle : MonoBehaviour
         canMove = true;
     }
 
-    /* 난이도에 따른 기본 속도 배율 설정 (게임 시작 시, 한 번만) */
+    /* 난이도에 따른 기본 속도 배율 설정 from ObstacleManager */
     public void SetDifficultySpeedMultiplier(float multiplier)
     {
         difficultySpeedMultiplier = multiplier;
-        Debug.Log($"{gameObject.name} 난이도 속도 배율: {multiplier}배속");
     }
 
-    /* 아이템에 의한 일시적 속도 배율 설정 */
+    /* 아이템에 의한 일시적 속도 배율 설정 from ObstacleManager */
     public void SetItemSpeedMultiplier(float multiplier)
     {
         itemSpeedMultiplier = multiplier;
