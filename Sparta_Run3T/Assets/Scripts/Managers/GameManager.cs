@@ -716,7 +716,7 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetAllObstaclesDifficultySpeed(multiplier);
         }
 
-        /*// 코인 매니저 속도 변경 (캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
+        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
         if (spawnManager != null)
         {
             spawnManager.SetDifficultySpeedMultiplier(multiplier);
@@ -753,7 +753,7 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetAllObstaclesItemSpeed(multiplier);
         }
 
-        /*// 코인 매니저 속도 변경 (캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
+        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
         if (spawnManager != null)
         {
             spawnManager.SetItemSpeedMultiplier(multiplier);
