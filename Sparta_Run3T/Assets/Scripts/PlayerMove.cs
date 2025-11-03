@@ -217,14 +217,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmosSelected() // 디버그용
-    {
-        if (!groundCheck) return;
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-    }
-
-
 
     /* 게임 재시작 시 플레이어 초기화 */
     public void ResetPlayer()
