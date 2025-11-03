@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private BoxCollider2D bodyCol;
+    [SerializeField] private CapsuleCollider2D bodyCol;
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Transform groundCheck;
 
