@@ -661,8 +661,11 @@ public class GameManager : MonoBehaviour
             StopCoroutine(speedEffectCoroutine);
         }
 
-        // 새로운 속도 효과 시작 (감소는 역수)
-        speedEffectCoroutine = StartCoroutine(ApplySpeedEffect(multiplier, duration, false));
+        // 속도 감소는 역수로 계산 (예: 2f → 0.5f, 속도를 절반으로)
+        float speedDownMultiplier = 1f / multiplier;
+
+        // 새로운 속도 효과 시작
+        speedEffectCoroutine = StartCoroutine(ApplySpeedEffect(speedDownMultiplier, duration, false));
     }
 
     // 속도 효과 적용 코루틴
