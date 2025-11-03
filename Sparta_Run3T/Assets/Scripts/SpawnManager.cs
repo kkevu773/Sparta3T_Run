@@ -49,19 +49,6 @@ public class SpawnManager : MonoBehaviour
 
 
 
-    /* 씬의 모든 코인 제거 */
-    public void ClearAllCoins()
-    {
-        if (coinsParent != null)
-        {
-            /* 부모 오브젝트의 모든 자식 제거 */
-            foreach (Transform child in coinsParent)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-    }
-
     /* 코인 스폰 시작 */
     public void StartSpawning()
     {
