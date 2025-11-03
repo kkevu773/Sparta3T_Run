@@ -134,7 +134,6 @@ public class BackgroundManager : MonoBehaviour
 
     public void Restart()
     {
-        /* Time.timeScale = 0f; */
         currentPrefabsIndex = 0;
         totalMovedDistance = 0f;
         SpriteRenderer restartScene = backgroundPrefabs[0].GetComponent<SpriteRenderer>();
@@ -142,38 +141,6 @@ public class BackgroundManager : MonoBehaviour
         {
             SpriteRenderer sr = bg.GetComponent<SpriteRenderer>();
             sr.sprite = restartScene.sprite;
-        }
-        /* Time.timeScale = 1f; */
-    }
-
-
-
-    /* 배경 스크롤 시작 */
-    public void StartScroll()
-    {
-        isScrolling = true;
-    }
-
-    /* 배경 스크롤 정지 */
-    public void StopScroll()
-    {
-        isScrolling = false;
-    }
-
-    /* 게임 재시작 시 배경 초기화 */
-    public void ResetBackground()
-    {
-        /* 첫 번째 배경으로 리셋 */
-        currentPrefabsIndex = 0;
-        totalMovedDistance = 0f;
-
-        SpriteRenderer firstSprite = backgroundPrefabs[0].GetComponent<SpriteRenderer>();
-
-        /* 모든 배경을 첫 번째 스프라이트로 변경 */
-        foreach (var bg in activeBackgrounds)
-        {
-            SpriteRenderer sr = bg.GetComponent<SpriteRenderer>();
-            sr.sprite = firstSprite.sprite;
         }
 
         /* 배경 위치 초기화 */
@@ -196,6 +163,20 @@ public class BackgroundManager : MonoBehaviour
 
         /* 스크롤 시작 */
         isScrolling = true;
+    }
+
+
+
+    /* 배경 스크롤 시작 */
+    public void StartScroll()
+    {
+        isScrolling = true;
+    }
+
+    /* 배경 스크롤 정지 */
+    public void StopScroll()
+    {
+        isScrolling = false;
     }
 
     /* 난이도에 따른 기본 속도 배율 설정 (게임 시작 시, 한 번만) */

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    Ready,      // 게임 시작 전
+    CountDown,  // 출발 전 카운트다운
     Playing,    // 게임 플레이 중
     GameOver    // 게임 오버
 }
@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
     [SerializeField] private BackgroundManager bgManager;
-    //[SerializeField] private SpawnManager spawnManager;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private PlayerMove player;
     [SerializeField] private ObstacleManager obstacleManager;
@@ -43,8 +42,11 @@ public class GameManager : MonoBehaviour
     private Coroutine speedEffectCoroutine;     // 속도 효과 코루틴
 
     [Header("State Info")]
-    [SerializeField] private GameState currentState = GameState.Ready;
+    [SerializeField] private GameState currentState = GameState.CountDown;
     public GameState CurrentState => currentState;
+
+    [Header("CountDown Settings")]
+    [SerializeField] private float countdownDuration = 1.1f;    // 각 카운트당 1초씩 표시
 
     public static GameManager Instance { get; private set; }
 
@@ -78,9 +80,8 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
-        StartCoroutine(ReconnectManagerReferences());
-
+        if (scene.name == "GameScene")
+            StartCoroutine(ReconnectManagerReferences(scene.name));
     }
 
     private void Start()
@@ -98,35 +99,18 @@ public class GameManager : MonoBehaviour
     {
         switch (currentState)
         {
-            case GameState.Ready:
-                // 스페이스바를 눌러 게임 시작
-                if (Input.GetKeyDown(KeyCode.Space))
+            case GameState.CountDown:
+                // 카운트다운 중에는 입력 무시
+                // 카운트다운 스킵 테스트 (개발용 - 나중에 삭제)
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    StartGame();
+                    StopAllCoroutines();  // 카운트다운 중단
+                    StartGame();          // 바로 게임 시작
                 }
 
-                // 난이도 설정 테스트용 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.Alpha1))   // 숫자 1 키
-                {
-                    SetDifficulty(Difficulty.Easy);
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha2))   // 숫자 2 키
-                {
-                    SetDifficulty(Difficulty.Normal);
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha3))   // 숫자 3 키
-                {
-                    SetDifficulty(Difficulty.Hard);
-                }
                 break;
 
             case GameState.Playing:
-                // P 키로 점수 획득 테스트 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    AddScore(10);
-                }
-
                 // H 키로 회복 아이템 획득 테스트 (개발용 - 나중에 삭제)
                 if (Input.GetKeyDown(KeyCode.H))
                 {
@@ -157,31 +141,21 @@ public class GameManager : MonoBehaviour
     // 게임 시작 전, 난이도 설정
     public void SetDifficulty(Difficulty difficulty)
     {
-        if (currentState != GameState.Ready)
-        {
-            Debug.LogWarning("난이도 설정은 게임 시작 전에만 가능합니다!!!");
-            return;
-        }
-
         currentDifficulty = difficulty;
 
         // 난이도에 따른 속도 배율 설정
         switch (difficulty)
         {
             case Difficulty.Easy:
-                difficultySpeedFactor = 0.7f;
+                difficultySpeedFactor = 0.8f;
                 break;
             case Difficulty.Normal:
                 difficultySpeedFactor = 1.0f;
                 break;
             case Difficulty.Hard:
-                difficultySpeedFactor = 1.3f;
+                difficultySpeedFactor = 1.2f;
                 break;
         }
-
-        Debug.Log($"난이도 설정 완료 : {currentDifficulty} ({difficultySpeedFactor}배속)");
-
-        // TODO: UI에 선택된 난이도 표시
     }
 
     // 게임 초기화 (첫 실행 시)
@@ -190,7 +164,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("=== 게임 초기화 시작 ===");
 
         // 게임 상태를 Ready로 설정
-        currentState = GameState.Ready;
+        currentState = GameState.CountDown;
 
         // 속도 초기화
         itemSpeedMultiplier = 1.0f;
@@ -233,8 +207,8 @@ public class GameManager : MonoBehaviour
             // Title UI 숨기기 (혹시 켜져있다면)
             uiManager.ShowUI(UIKey.UI_TITLE_PANEL, false);
 
-            // TODO: 난이도 선택 UI 표시
-            // uiManager.ShowUI(UIKey.UI_DIFFICULTY_PANEL, true);
+            // Countdown UI는 아직 숨김 (카운트다운 시작 시 표시)
+            uiManager.HideCountdown();
         }
 
         // BGM 재생
@@ -264,24 +238,76 @@ public class GameManager : MonoBehaviour
             player.StopPlaying();
         }
 
-        Debug.Log("=== 게임 초기화 완료 - Ready 상태 (스페이스바를 눌러 시작) ===");
+        Debug.Log("=== 게임 초기화 완료 - CountDown 상태 (Esc 를 눌러 스킵) ===");
+    }
+
+    // 카운트다운 시작 (GameScene 로드 직후 자동 호출)
+    public void StartCountdown()
+    {
+        if (currentState != GameState.CountDown) return;
+
+        Debug.Log("=== 카운트다운 시작! ===");
+
+        // 카운트다운 코루틴 시작
+        StartCoroutine(CountdownCoroutine());
+    }
+
+    // 카운트다운 코루틴 (3 → 2 → 1 → GO!)
+    private IEnumerator CountdownCoroutine()
+    {
+        // 카운트다운 사운드 재생 (하나의 오디오소스 안에 "쓰리-투-원-고!" 전체)
+        if (audioManager != null)
+        {
+            audioManager.Play(SoundKey.SFX_COUNTDOWN);
+        }
+
+        // 3
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("3");
+        }
+        yield return new WaitForSeconds(countdownDuration);
+
+        // 2
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("2");
+        }
+        yield return new WaitForSeconds(countdownDuration);
+
+        // 1
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("1");
+        }
+        yield return new WaitForSeconds(countdownDuration);
+
+        // GO!
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("GO!");
+        }
+        yield return new WaitForSeconds(0.5f);  // GO! 는 짧게 표시
+
+        // 카운트다운 UI 숨기기
+        if (uiManager != null)
+        {
+            uiManager.HideCountdown();
+        }
+
+        // 게임 시작
+        StartGame();
     }
 
     // 게임 시작 (Ready -> Playing)
     public void StartGame()
     {
-        if (currentState != GameState.Ready) return;
+        if (currentState != GameState.CountDown) return;
 
         Debug.Log("=== 게임 시작! ===");
 
         // 게임 상태를 Playing으로 변경
         currentState = GameState.Playing;
-
-        // TODO: 난이도 선택 UI 숨기기
-        // if (uiManager != null)
-        // {
-        //     uiManager.ShowUI(UIKey.UI_DIFFICULTY_PANEL, false);
-        // }
 
         // 모든 매니저에 난이도 기반 속도 적용
         ApplyDifficultySpeedToAll(difficultySpeedFactor);
@@ -393,38 +419,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// 게임 재시작 (GameOver -> Ready -> Playing)
+    // 게임 재시작 (GameOver -> CountDown -> Playing)
     public void RestartGame()
     {
         if (currentState != GameState.GameOver) return;
 
         Debug.Log("=== 게임 재시작 - 씬 Reload ===");
 
-        /*// 1. 씬 내의 모든 게임 오브젝트 정리
-        ClearGameObjects();
-
-        // 2. 매니저들 리셋
-        ResetAllManagers();
-
-        // 3. 게임 재초기화 (Ready 상태로)
-        InitGame();
-
-        // 4. 바로 게임 시작하려면 이 줄 주석 해제
-        //StartGame();*/
-
         // 씬 전체 재로드(모든 타일 복구됨!)
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // 씬 재로드 후, 모든 매니저 재연결
-    private IEnumerator ReconnectManagerReferences()
+    private IEnumerator ReconnectManagerReferences(string sceneName)
     {
         // 씬이 완전히 로드될 때까지 한 프레임 대기
         yield return new WaitForEndOfFrame();
 
         // 모든 매니저들을 찾아서 다시 연결
         bgManager = FindObjectOfType<BackgroundManager>();
-        //spawnManager = FindObjectOfType<SpawnManager>();
         scoreManager = FindObjectOfType<ScoreManager>();
         player = FindObjectOfType<PlayerMove>();
         obstacleManager = FindObjectOfType<ObstacleManager>();
@@ -435,62 +448,11 @@ public class GameManager : MonoBehaviour
 
         // 게임 초기화 실행
         InitGame();
-    }
-
-    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
-    // 씬 내의 모든 게임 오브젝트 정리
-    private void ClearGameObjects()
-    {
-        // 장애물 전부 제거
-        if (obstacleManager != null)
-        {
-            obstacleManager.ClearAllObstacles();
-        }
-
-        /*// 코인 전부 제거
-        if (spawnManager != null)
-        {
-            spawnManager.ClearAllCoins();
-        }*/
-    }
 
 
-    // TODO : RestartGame() 이 씬 재로드 방식 아니고, 초기화 방식으로 수정되면 사용
-    // 모든 매니저 리셋
-    private void ResetAllManagers()
-    {
-        // 플레이어 리셋
-        if (player != null)
-        {
-            player.ResetPlayer();
-        }
-
-        // 배경 리셋
-        if (bgManager != null)
-        {
-            bgManager.ResetBackground();
-        }
-
-        // 타일맵 리셋
-        if (tileMap != null)
-        {
-            tileMap.ResetTilemap();
-        }
-
-        // 점수 리셋
-        if (scoreManager != null)
-        {
-            scoreManager.ResetScore();
-        }
-
-        // UI 리셋
-        if (uiManager != null)
-        {
-            uiManager.UpdateScore(0);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_PANEL, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_RETRY_BUTTON, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
-        }
+        // 자동으로 카운트다운 시작 (선택사항)
+        yield return new WaitForSeconds(0.5f);
+        StartCountdown();
     }
 
     // 모든 스폰 매니저 시작
@@ -504,15 +466,6 @@ public class GameManager : MonoBehaviour
             // 타이머 리셋용
             obstacleManager.StartSpawning();
         }
-
-        /*// 코인 스폰 시작
-        if (spawnManager != null)
-        {
-            spawnManager.enabled = true;
-
-            // 타이머 리셋용
-            spawnManager.StartSpawning();
-        }*/
 
         // 아이템 스폰 시작
         if (itemManager != null)
@@ -533,14 +486,6 @@ public class GameManager : MonoBehaviour
             obstacleManager.StopSpawning();
         }
 
-        /*// 코인 스폰 정지
-        if (spawnManager != null)
-        {
-            spawnManager.enabled = false;
-
-            spawnManager.StopSpawning();
-        }*/
-
         // 아이템 스폰 정지
         if (itemManager != null)
         {
@@ -557,44 +502,6 @@ public class GameManager : MonoBehaviour
                 if (ob != null) ob.StopMoving();
             }
         }
-
-        /*if (spawnManager != null && spawnManager.coinsParent != null)
-        {
-            var golds = spawnManager.coinsParent.GetComponentsInChildren<GoldCoin>(true);
-            foreach (var g in golds) if (g != null) g.StopMoving();
-
-            var silvers = spawnManager.coinsParent.GetComponentsInChildren<SliverCoin>(true);
-            foreach (var s in silvers) if (s != null) s.StopMoving();
-        }*/
-    }
-
-    // 타이틀 화면으로 돌아가기 (나중에 구현)
-    public void GoToTitle()
-    {
-        Debug.Log("타이틀 화면으로 이동 (미구현)");
-
-        // 모든 스폰 정지
-        StopAllSpawners();
-
-        // UI 전환
-        if (uiManager != null)
-        {
-            // 모든 UI 숨기기
-            uiManager.ShowUI(UIKey.UI_HUD_SCORE_TEXT, false);
-            uiManager.ShowUI(UIKey.UI_HUD_BESTSCORE_TEXT, false);
-            uiManager.ShowUI(UIKey.UI_HUD_HP_BAR, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_PANEL, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_RETRY_BUTTON, false);
-            uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
-
-            // 타이틀 UI 보이기
-            uiManager.ShowUI(UIKey.UI_TITLE_PANEL, true);
-        }
-
-        // BGM 변경 (타이틀 BGM이 있다면)
-        // audioManager?.PlayBGM(SoundKey.BGM_TITLE);
-
-        currentState = GameState.Ready;
     }
 
     // PlayerPrefs 관련: 최고점 불러오기
@@ -617,7 +524,6 @@ public class GameManager : MonoBehaviour
             Debug.Log($"새 최고점 저장: {bestScore}");
         }
     }
-
 
     // HP 회복 아이템 획득 처리
     public void OnHealItemCollected(int healAmount)
@@ -679,8 +585,6 @@ public class GameManager : MonoBehaviour
         string effectName = isSpeedUp ? "속도 증가" : "속도 감소";
         Debug.Log($"{effectName} 효과 시작! {multiplier}배, {duration}초");
 
-        // TODO: UI에 버프 아이콘 표시
-
         // 지속 시간 대기
         yield return new WaitForSeconds(duration);
 
@@ -689,8 +593,6 @@ public class GameManager : MonoBehaviour
         ApplyItemSpeedToAll(1f);
 
         Debug.Log($"{effectName} 효과 종료!");
-
-        // TODO: UI 버프 아이콘 제거
 
         speedEffectCoroutine = null;
     }
@@ -716,13 +618,6 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetDifficultySpeedMultiplier(multiplier);
             obstacleManager.SetAllObstaclesDifficultySpeed(multiplier);
         }
-
-        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
-        if (spawnManager != null)
-        {
-            spawnManager.SetDifficultySpeedMultiplier(multiplier);
-            spawnManager.SetAllCoinsDifficultySpeed(multiplier);
-        }*/
 
         // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)
@@ -753,13 +648,6 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetItemSpeedMultiplier(multiplier);
             obstacleManager.SetAllObstaclesItemSpeed(multiplier);
         }
-
-        /*// 코인 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
-        if (spawnManager != null)
-        {
-            spawnManager.SetItemSpeedMultiplier(multiplier);
-            spawnManager.SetAllCoinsItemSpeed(multiplier);
-        }*/
 
         // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)

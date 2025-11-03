@@ -31,4 +31,8 @@ public enum SoundKey
     BGM_RESULT,
     BGM_BUFF,
     #endregion
+
+    #region 기타 효과음
+    SFX_COUNTDOWN
+    #endregion
 }

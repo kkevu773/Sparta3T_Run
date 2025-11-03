@@ -226,42 +226,6 @@ public class PlayerMove : MonoBehaviour
 
 
 
-    /* 게임 재시작 시 플레이어 초기화 */
-    public void ResetPlayer()
-    {
-        /* 체력 리셋 */
-        PlayerHp playerHp = GetComponent<PlayerHp>();
-        if (playerHp != null)
-        {
-            playerHp.ResetHP();
-        }
-
-        /* 시작 위치로 이동 (예: x = -6f) */
-        transform.position = new Vector3(-6f, transform.position.y, 0f);
-
-        /* 물리 초기화 */
-        rb.velocity = Vector2.zero;
-        rb.angularVelocity = 0f;
-
-        /* 상태 초기화 */
-        jumpCount = 0;
-        isSliding = false;
-        spinActive = false;
-        doubleJumpFX = false;
-        runTimer = 0f;
-        runToggle = false;
-
-        /* 콜라이더 원래대로 */
-        ApplySlideCollider(false);
-
-        /* 회전 초기화 */
-        sr.transform.localEulerAngles = Vector3.zero;
-        sr.transform.localPosition = DefaultLocalPos;
-
-        /* 스프라이트 초기화 */
-        sr.sprite = runA;
-    }
-
     /* 게임오버 시 플레이어 입력 정지 */
     public void StopPlaying()
     {
