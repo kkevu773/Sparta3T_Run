@@ -17,6 +17,11 @@ public class SpawnManager : MonoBehaviour
 
     private float timer = 0f;
 
+    /* 난이도, 아이템별 속도 캐싱 */
+    [Header("Speed Settings")]
+    [SerializeField] private float cachedDifficultySpeed = 1.0f;
+    [SerializeField] private float cachedItemSpeed = 1.0f;
+
     void Update()
     {
         timer += Time.deltaTime;
@@ -68,6 +73,19 @@ public class SpawnManager : MonoBehaviour
     public void StopSpawning()
     {
         enabled = false;  /* Update 비활성화 */
+    }
+
+    /* 난이도에 따른 기본 속도 배율 설정 (게임 시작 시, 한 번만) */
+    public void SetDifficultySpeedMultiplier(float multiplier)
+    {
+        cachedDifficultySpeed = multiplier;
+        Debug.Log($"{gameObject.name} 난이도 속도 배율: {multiplier}배속");
+    }
+
+    /* 아이템에 의한 일시적 속도 배율 설정 */
+    public void SetItemSpeedMultiplier(float multiplier)
+    {
+        cachedItemSpeed = multiplier;
     }
 }
 
