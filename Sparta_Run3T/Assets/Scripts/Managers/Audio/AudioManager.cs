@@ -13,7 +13,7 @@ public struct SoundPair
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance { get; private set; }
+    public static AudioManager Instance { get; private set; }
 
     [Header("사운드 키 목록")]
     public SoundPair[] soundPairs;
@@ -23,9 +23,9 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {
@@ -49,9 +49,19 @@ public class AudioManager : MonoBehaviour
         {
             return;
         }
+
         if (soundDic.TryGetValue(key, out AudioSource src))
         {
-            src.Play();
+            src.PlayOneShot(src.clip, src.volume);
+        }
+    }
+
+    public void PlayOneShot(SoundKey key)
+    {
+        if(soundDic.TryGetValue(key, out AudioSource src))
+        {
+            float volume = src.volume;
+            src.PlayOneShot(src.clip, volume);
         }
     }
 
@@ -86,8 +96,41 @@ public class AudioManager : MonoBehaviour
             src.Stop();
         }
     }
-    
-        
+
+    public void SetVolumeAll(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        foreach (var pair in soundDic)
+        {
+            pair.Value.volume = volume;
+        }
+    }
+    public void SetBGMVolume(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        foreach (var pair in soundDic)
+        {
+            if (pair.Key.ToString().StartsWith("BGM"))
+            {
+                pair.Value.volume = volume;
+            }
+        }
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        foreach (var pair in soundDic)
+        {
+            string keyName = pair.Key.ToString();
+
+            if (!keyName.StartsWith("BGM"))
+            {
+                pair.Value.volume = volume;
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

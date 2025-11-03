@@ -19,6 +19,11 @@ public class TileMap : MonoBehaviour
     /* 바닥 타일 스크롤 시작/정지 구분 */
     private bool isScrolling = true;
 
+    /* 난이도, 아이템별 속도 조절용 */
+    [Header("Speed Settings")]
+    [SerializeField] private float difficultySpeedMultiplier = 1.0f;
+    [SerializeField] private float itemSpeedMultiplier = 1.0f;
+
     void Awake()
     {
         if (!cam) cam = Camera.main;
@@ -35,7 +40,10 @@ public class TileMap : MonoBehaviour
         /* isScrolling == false => 바로 return */
         if (!isScrolling) return;
 
-        transform.Translate(Vector3.left * speed * Time.deltaTime, Space.World);
+        /* 최종 속도 = 기본 속도 * 난이도 배율 * 아이템 배율 */
+        float appliedSpeed = speed * difficultySpeedMultiplier * itemSpeedMultiplier;
+
+        transform.Translate(Vector3.left * appliedSpeed * Time.deltaTime, Space.World);
 
         float leftEdge = cam.ViewportToWorldPoint(new Vector3(0f, 0.5f, 0f)).x - leftCullMargin;
 
@@ -109,5 +117,18 @@ public class TileMap : MonoBehaviour
         isScrolling = true;
 
         Debug.Log("타일맵 리셋 완료!");
+    }
+
+    /* 난이도에 따른 기본 속도 배율 설정 (게임 시작 시, 한 번만) */
+    public void SetDifficultySpeedMultiplier(float multiplier)
+    {
+        difficultySpeedMultiplier = multiplier;
+        Debug.Log($"{gameObject.name} 난이도 속도 배율: {multiplier}배속");
+    }
+
+    /* 아이템에 의한 일시적 속도 배율 설정 */
+    public void SetItemSpeedMultiplier(float multiplier)
+    {
+        itemSpeedMultiplier = multiplier;
     }
 }

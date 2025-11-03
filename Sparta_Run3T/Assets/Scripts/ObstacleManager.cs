@@ -14,6 +14,13 @@ public class ObstacleManager : MonoBehaviour
     private float timer = 0f;
     private GameObject[] obstaclePrefabs;
 
+    /* 난이도, 아이템별 속도 캐싱 */
+    [Header("Speed Settings")]
+    [SerializeField] private float cachedDifficultySpeed = 1.0f;
+    [SerializeField] private float cachedItemSpeed = 1.0f;
+
+    Obstacle currentObstacle;
+
     void Awake()
     {
         // Resources,Obstacles 폴더 안에 있는 모든 프리팹 로드
@@ -66,6 +73,15 @@ public class ObstacleManager : MonoBehaviour
         newObstacle.name += "_Spawned"; // Hierarchy에서 구분용
 
         Debug.Log($"Spawned: {newObstacle.name} at {spawnPos}");
+
+        Obstacle currentObstacle = newObstacle.GetComponent<Obstacle>();
+
+        /* 스폰된 장애물에 현재 속도 배율 적용 */
+        if (currentObstacle != null)
+        {
+            currentObstacle.SetDifficultySpeedMultiplier(cachedDifficultySpeed);
+            currentObstacle.SetItemSpeedMultiplier(cachedItemSpeed);
+        }
     }
 
 
@@ -94,5 +110,42 @@ public class ObstacleManager : MonoBehaviour
     public void StopSpawning()
     {
         enabled = false;  /* Update 비활성화 */
+    }
+
+    /* 난이도에 따른 기본 속도 배율 설정 (게임 시작 시, 한 번만) */
+    public void SetDifficultySpeedMultiplier(float multiplier)
+    {
+        cachedDifficultySpeed = multiplier;
+        Debug.Log($"{gameObject.name} 난이도 속도 배율: {multiplier}배속");
+    }
+
+    /* 아이템에 의한 일시적 속도 배율 설정 */
+    public void SetItemSpeedMultiplier(float multiplier)
+    {
+        cachedItemSpeed = multiplier;
+    }
+
+    /* 난이도에 따른 모든 활성 장애물의 속도 조절 */
+    public void SetAllObstaclesDifficultySpeed(float multiplier)
+    {
+        if (obstaclesParent == null) return;
+
+        var activeObstacles = obstaclesParent.GetComponentsInChildren<Obstacle>();
+        foreach (var obs in activeObstacles)
+        {
+            if (obs != null) obs.SetDifficultySpeedMultiplier(multiplier);
+        }
+    }
+
+    /* 아이템에 의한 모든 활성 장애물의 속도 조절 */
+    public void SetAllObstaclesItemSpeed(float multiplier)
+    {
+        if (obstaclesParent == null) return;
+
+        var activeObstacles = obstaclesParent.GetComponentsInChildren<Obstacle>();
+        foreach (var obs in activeObstacles)
+        {
+            if (obs != null) obs.SetItemSpeedMultiplier(multiplier);
+        }
     }
 }

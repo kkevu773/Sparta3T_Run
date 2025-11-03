@@ -17,6 +17,9 @@ public enum EffectKey
     #region 아이템
     ITEM_COIN,
     ITEM_REDCOIN,
+    ITEM_HEAL,
+    ITEM_1,
+    ITEM_2,
     #endregion
 
     #region 충돌
