@@ -166,13 +166,13 @@ public class GameManager : MonoBehaviour
         switch (difficulty)
         {
             case Difficulty.Easy:
-                difficultySpeedFactor = 0.7f;
+                difficultySpeedFactor = 0.8f;
                 break;
             case Difficulty.Normal:
                 difficultySpeedFactor = 1.0f;
                 break;
             case Difficulty.Hard:
-                difficultySpeedFactor = 1.3f;
+                difficultySpeedFactor = 1.2f;
                 break;
         }
 
