@@ -27,9 +27,9 @@ public class Hp : MonoBehaviour
             }
 
             // 아이템 획득 효과음
-            if (AudioManager.instance != null)
+            if (AudioManager.Instance != null)
             {
-                AudioManager.instance.Play(SoundKey.SFX_ITEM_PICKUP);
+                AudioManager.Instance.Play(SoundKey.SFX_ITEM_PICKUP);
             }
             
             Debug.Log("플레이어가 HP 아이템을 획득했습니다!");
