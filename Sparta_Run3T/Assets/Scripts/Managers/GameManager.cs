@@ -108,28 +108,9 @@ public class GameManager : MonoBehaviour
                     StartGame();          // 바로 게임 시작
                 }
 
-                // 난이도 설정 테스트용 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.Alpha1))   // 숫자 1 키
-                {
-                    SetDifficulty(Difficulty.Easy);
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha2))   // 숫자 2 키
-                {
-                    SetDifficulty(Difficulty.Normal);
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha3))   // 숫자 3 키
-                {
-                    SetDifficulty(Difficulty.Hard);
-                }
                 break;
 
             case GameState.Playing:
-                // P 키로 점수 획득 테스트 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.P))
-                {
-                    AddScore(10);
-                }
-
                 // H 키로 회복 아이템 획득 테스트 (개발용 - 나중에 삭제)
                 if (Input.GetKeyDown(KeyCode.H))
                 {
@@ -160,12 +141,6 @@ public class GameManager : MonoBehaviour
     // 게임 시작 전, 난이도 설정
     public void SetDifficulty(Difficulty difficulty)
     {
-        if (currentState != GameState.Ready)
-        {
-            Debug.LogWarning("난이도 설정은 게임 시작 전에만 가능합니다!!!");
-            return;
-        }
-
         currentDifficulty = difficulty;
 
         // 난이도에 따른 속도 배율 설정
@@ -181,8 +156,6 @@ public class GameManager : MonoBehaviour
                 difficultySpeedFactor = 1.2f;
                 break;
         }
-
-        Debug.Log($"난이도 설정 완료 : {currentDifficulty} ({difficultySpeedFactor}배속)");
     }
 
     // 게임 초기화 (첫 실행 시)
