@@ -183,5 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 748be743c68232743b01225af969d583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 5
   healAmount: 10
+  difficultySpeedMultiplier: 1
+  itemSpeedMultiplier: 1

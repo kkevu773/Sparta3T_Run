@@ -184,6 +184,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSpeedUp: 0
-  moveSpeed: 3
+  moveSpeed: 5
   effectAmount: 2
   effectDuration: 5
+  difficultySpeedMultiplier: 1
+  itemSpeedMultiplier: 1
