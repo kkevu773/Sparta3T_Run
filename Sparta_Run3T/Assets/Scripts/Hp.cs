@@ -23,7 +23,7 @@ public class Hp : MonoBehaviour
             // 체력 회복 GameManager 를 거쳐서 처리
             if (GameManager.Instance != null)
             {
-                //GameManager.Instance.OnHpItemCollected(healAmount);
+                GameManager.Instance.OnHealItemCollected(healAmount);
             }
 
             // 아이템 획득 효과음
