@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
     [SerializeField] private BackgroundManager bgManager;
-    [SerializeField] private SpawnManager spawnManager;
+    //[SerializeField] private SpawnManager spawnManager;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private PlayerMove player;
     [SerializeField] private ObstacleManager obstacleManager;
@@ -423,7 +423,7 @@ public class GameManager : MonoBehaviour
 
         // 모든 매니저들을 찾아서 다시 연결
         bgManager = FindObjectOfType<BackgroundManager>();
-        spawnManager = FindObjectOfType<SpawnManager>();
+        //spawnManager = FindObjectOfType<SpawnManager>();
         scoreManager = FindObjectOfType<ScoreManager>();
         player = FindObjectOfType<PlayerMove>();
         obstacleManager = FindObjectOfType<ObstacleManager>();
@@ -446,11 +446,11 @@ public class GameManager : MonoBehaviour
             obstacleManager.ClearAllObstacles();
         }
 
-        // 코인 전부 제거
+        /*// 코인 전부 제거
         if (spawnManager != null)
         {
             spawnManager.ClearAllCoins();
-        }
+        }*/
     }
 
 
@@ -504,14 +504,14 @@ public class GameManager : MonoBehaviour
             obstacleManager.StartSpawning();
         }
 
-        // 코인 스폰 시작
+        /*// 코인 스폰 시작
         if (spawnManager != null)
         {
             spawnManager.enabled = true;
 
             // 타이머 리셋용
             spawnManager.StartSpawning();
-        }
+        }*/
 
         // 아이템 스폰 시작
         if (itemManager != null)
@@ -532,13 +532,13 @@ public class GameManager : MonoBehaviour
             obstacleManager.StopSpawning();
         }
 
-        // 코인 스폰 정지
+        /*// 코인 스폰 정지
         if (spawnManager != null)
         {
             spawnManager.enabled = false;
 
             spawnManager.StopSpawning();
-        }
+        }*/
 
         // 아이템 스폰 정지
         if (itemManager != null)
@@ -557,14 +557,14 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (spawnManager != null && spawnManager.coinsParent != null)
+        /*if (spawnManager != null && spawnManager.coinsParent != null)
         {
             var golds = spawnManager.coinsParent.GetComponentsInChildren<GoldCoin>(true);
             foreach (var g in golds) if (g != null) g.StopMoving();
 
             var silvers = spawnManager.coinsParent.GetComponentsInChildren<SliverCoin>(true);
             foreach (var s in silvers) if (s != null) s.StopMoving();
-        }
+        }*/
     }
 
     // 타이틀 화면으로 돌아가기 (나중에 구현)
@@ -715,11 +715,12 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetDifficultySpeedMultiplier(multiplier);
         }
 
-        // 코인 매니저 속도 변경 (스폰된 코인들도 자동 적용)
+        /*// 코인 매니저 속도 변경 (캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
         if (spawnManager != null)
         {
             spawnManager.SetDifficultySpeedMultiplier(multiplier);
-        }
+            spawnManager.SetAllCoinsDifficultySpeed(multiplier);
+        }*/
 
         // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
         if (itemManager != null)
@@ -749,11 +750,12 @@ public class GameManager : MonoBehaviour
             obstacleManager.SetItemSpeedMultiplier(multiplier);
         }
 
-        // 코인 매니저 속도 변경 (스폰된 코인들도 자동 적용)
+        /*// 코인 매니저 속도 변경 (캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
         if (spawnManager != null)
         {
             spawnManager.SetItemSpeedMultiplier(multiplier);
-        }
+            spawnManager.SetAllCoinsItemSpeed(multiplier);
+        }*/
 
         // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
         if (itemManager != null)
