@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     private Coroutine speedEffectCoroutine;     // 속도 효과 코루틴
 
     [Header("State Info")]
-    [SerializeField] private GameState currentState = GameState.Ready;
+    [SerializeField] private GameState currentState = GameState.Playing;
     public GameState CurrentState => currentState;
 
     public static GameManager Instance { get; private set; }
@@ -77,9 +77,7 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-
-        StartCoroutine(ReconnectManagerReferences());
-
+        StartCoroutine(ReconnectManagerReferences(scene.name));
     }
 
     private void Start()
@@ -393,7 +391,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 씬 재로드 후, 모든 매니저 재연결
-    private IEnumerator ReconnectManagerReferences()
+    private IEnumerator ReconnectManagerReferences(string sceneName)
     {
         // 씬이 완전히 로드될 때까지 한 프레임 대기
         yield return new WaitForEndOfFrame();
