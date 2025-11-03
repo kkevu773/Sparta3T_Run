@@ -95,7 +95,7 @@ public class ObstacleManager : MonoBehaviour
     {
         if (obstaclesParent != null)
         {
-            // 부모 오브젝트의 모든 자식 제거
+            /* 부모 오브젝트(Obstacles) 의 모든 자식(각각의 장애물들) 제거 */
             foreach (Transform child in obstaclesParent)
             {
                 Destroy(child.gameObject);
