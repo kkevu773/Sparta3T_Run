@@ -9,7 +9,6 @@ public class ObstacleManager : MonoBehaviour
     public float minY = -1f;
     public float maxY = 2f;
     public float spawnInterval = 0.02f;
-    public float obstacleSpeed = 5f;
 
     private float timer = 0f;
     private GameObject[] obstaclePrefabs;
