@@ -709,10 +709,11 @@ public class GameManager : MonoBehaviour
             tileMap.SetDifficultySpeedMultiplier(multiplier);
         }
 
-        // 장애물 매니저 속도 변경 (스폰된 장애물들도 자동 적용)
+        // 장애물 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 장애물들도 실시간 적용)
         if (obstacleManager != null)
         {
             obstacleManager.SetDifficultySpeedMultiplier(multiplier);
+            obstacleManager.SetAllObstaclesDifficultySpeed(multiplier);
         }
 
         /*// 코인 매니저 속도 변경 (캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
@@ -744,10 +745,11 @@ public class GameManager : MonoBehaviour
             tileMap.SetItemSpeedMultiplier(multiplier);
         }
 
-        // 장애물 매니저 속도 변경 (스폰된 장애물들도 자동 적용)
+        // 장애물 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 장애물들도 실시간 적용)
         if (obstacleManager != null)
         {
             obstacleManager.SetItemSpeedMultiplier(multiplier);
+            obstacleManager.SetAllObstaclesItemSpeed(multiplier);
         }
 
         /*// 코인 매니저 속도 변경 (캐시 업데이트 + 이미 스폰된 코인들도 실시간 적용)
