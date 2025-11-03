@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    Ready,      // 게임 시작 전
+    CountDown,  // 출발 전 카운트다운
     Playing,    // 게임 플레이 중
     GameOver    // 게임 오버
 }
@@ -42,8 +42,11 @@ public class GameManager : MonoBehaviour
     private Coroutine speedEffectCoroutine;     // 속도 효과 코루틴
 
     [Header("State Info")]
-    [SerializeField] private GameState currentState = GameState.Playing;
+    [SerializeField] private GameState currentState = GameState.CountDown;
     public GameState CurrentState => currentState;
+
+    [Header("CountDown Settings")]
+    [SerializeField] private float countdownDuration = 1.1f;    // 각 카운트당 1초씩 표시
 
     public static GameManager Instance { get; private set; }
 
@@ -77,7 +80,8 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        StartCoroutine(ReconnectManagerReferences(scene.name));
+        if (scene.name == "GameScene")
+            StartCoroutine(ReconnectManagerReferences(scene.name));
     }
 
     private void Start()
@@ -95,11 +99,13 @@ public class GameManager : MonoBehaviour
     {
         switch (currentState)
         {
-            case GameState.Ready:
-                // 스페이스바를 눌러 게임 시작
-                if (Input.GetKeyDown(KeyCode.Space))
+            case GameState.CountDown:
+                // 카운트다운 중에는 입력 무시
+                // 카운트다운 스킵 테스트 (개발용 - 나중에 삭제)
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    StartGame();
+                    StopAllCoroutines();  // 카운트다운 중단
+                    StartGame();          // 바로 게임 시작
                 }
 
                 // 난이도 설정 테스트용 (개발용 - 나중에 삭제)
@@ -185,7 +191,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("=== 게임 초기화 시작 ===");
 
         // 게임 상태를 Ready로 설정
-        currentState = GameState.Ready;
+        currentState = GameState.CountDown;
 
         // 속도 초기화
         itemSpeedMultiplier = 1.0f;
@@ -227,6 +233,9 @@ public class GameManager : MonoBehaviour
 
             // Title UI 숨기기 (혹시 켜져있다면)
             uiManager.ShowUI(UIKey.UI_TITLE_PANEL, false);
+
+            // Countdown UI는 아직 숨김 (카운트다운 시작 시 표시)
+            uiManager.HideCountdown();
         }
 
         // BGM 재생
@@ -256,13 +265,71 @@ public class GameManager : MonoBehaviour
             player.StopPlaying();
         }
 
-        Debug.Log("=== 게임 초기화 완료 - Ready 상태 (스페이스바를 눌러 시작) ===");
+        Debug.Log("=== 게임 초기화 완료 - CountDown 상태 (Esc 를 눌러 스킵) ===");
+    }
+
+    // 카운트다운 시작 (GameScene 로드 직후 자동 호출)
+    public void StartCountdown()
+    {
+        if (currentState != GameState.CountDown) return;
+
+        Debug.Log("=== 카운트다운 시작! ===");
+
+        // 카운트다운 코루틴 시작
+        StartCoroutine(CountdownCoroutine());
+    }
+
+    // 카운트다운 코루틴 (3 → 2 → 1 → GO!)
+    private IEnumerator CountdownCoroutine()
+    {
+        // 카운트다운 사운드 재생 (하나의 오디오소스 안에 "쓰리-투-원-고!" 전체)
+        if (audioManager != null)
+        {
+            audioManager.Play(SoundKey.SFX_COUNTDOWN);
+        }
+
+        // 3
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("3");
+        }
+        yield return new WaitForSeconds(countdownDuration);
+
+        // 2
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("2");
+        }
+        yield return new WaitForSeconds(countdownDuration);
+
+        // 1
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("1");
+        }
+        yield return new WaitForSeconds(countdownDuration);
+
+        // GO!
+        if (uiManager != null)
+        {
+            uiManager.ShowCountdown("GO!");
+        }
+        yield return new WaitForSeconds(0.5f);  // GO! 는 짧게 표시
+
+        // 카운트다운 UI 숨기기
+        if (uiManager != null)
+        {
+            uiManager.HideCountdown();
+        }
+
+        // 게임 시작
+        StartGame();
     }
 
     // 게임 시작 (Ready -> Playing)
     public void StartGame()
     {
-        if (currentState != GameState.Ready) return;
+        if (currentState != GameState.CountDown) return;
 
         Debug.Log("=== 게임 시작! ===");
 
@@ -379,7 +446,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// 게임 재시작 (GameOver -> Ready -> Playing)
+    // 게임 재시작 (GameOver -> CountDown -> Playing)
     public void RestartGame()
     {
         if (currentState != GameState.GameOver) return;
@@ -409,12 +476,10 @@ public class GameManager : MonoBehaviour
         // 게임 초기화 실행
         InitGame();
 
-        // GameScene이고 난이도가 이미 설정되어 있으면 자동으로 게임 시작
-        if (sceneName == "GameScene" && difficultySpeedFactor > 0f)
-        {
-            yield return new WaitForEndOfFrame(); // 한 프레임 더 대기 (매니저 초기화 완료 대기)
-            StartGame();
-        }
+
+        // 자동으로 카운트다운 시작 (선택사항)
+        yield return new WaitForSeconds(0.5f);
+        StartCountdown();
     }
 
     // 모든 스폰 매니저 시작
