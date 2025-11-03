@@ -8,6 +8,7 @@ public enum SoundKey
 
     #region 플레이어
     SFX_PLAYER_JUMP,
+    SFX_PLAYER_DOUBLEJUMP,
     SFX_PLAYER_SLIDE,
     SFX_PLAYER_LAND,
     #endregion
@@ -16,6 +17,7 @@ public enum SoundKey
     SFX_ITEM_COIN,
     SFX_ITEM_PICKUP,
     SFX_OBSTACLE_HIT,
+    SFX_ITEM_HEAL,
     #endregion
 
     #region UI

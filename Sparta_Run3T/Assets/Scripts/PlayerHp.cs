@@ -40,9 +40,9 @@ public class PlayerHp : MonoBehaviour
         }
 
         /* 피격 사운드 재생 */
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.Play(SoundKey.SFX_OBSTACLE_HIT);
+            AudioManager.Instance.Play(SoundKey.SFX_OBSTACLE_HIT);
         }
 
         if (Hp <= 0) 

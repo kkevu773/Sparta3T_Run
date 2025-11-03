@@ -45,8 +45,18 @@ public class CoinDelete : MonoBehaviour
                 if (!map.HasTile(cell)) continue;
 
                 // TODO: 점수/VFX/사운드
-                GameManager.Instance.AddScore(value);
+                // Score.Add(value);
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.AddScore(value);
+                }
                 // Instantiate(vfx, map.GetCellCenterWorld(cell), Quaternion.identity);
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayOneShot(SoundKey.SFX_ITEM_COIN);
+                }
+
+                EffectManager.Instance?.Play(EffectKey.ITEM_COIN, map.GetCellCenterWorld(cell));
 
                 map.SetTile(cell, null); // 해당 코인 타일 삭제=획득
             }

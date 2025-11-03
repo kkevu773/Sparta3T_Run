@@ -22,6 +22,8 @@ public class PlayerJumpTest : MonoBehaviour
 
     private void Update()
     {
+        if (UIManager.Instance != null && UIManager.Instance.IsPaused)
+            return;
         CheckGround();
         if (Input.GetKeyDown(KeyCode.Space))
         {

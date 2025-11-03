@@ -230,6 +230,7 @@ public class GameManager : MonoBehaviour
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
 
             // Title UI 숨기기 (혹시 켜져있다면)
+            uiManager.ShowUI(UIKey.UI_TITLE_PANEL, false);
             uiManager.ShowUI(UIKey.UI_TITLEL_PANEL, false);
 
             // TODO: 난이도 선택 UI 표시
@@ -382,6 +383,7 @@ public class GameManager : MonoBehaviour
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_PANEL, true);
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_RETRY_BUTTON, true);
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, true);
+            uiManager.ShowGameOver(scoreManager != null ? scoreManager.GetScore() : 0);
         }
 
         // 게임오버 사운드 재생
@@ -586,7 +588,7 @@ public class GameManager : MonoBehaviour
             uiManager.ShowUI(UIKey.UI_GAMEMOVER_TITLE_BUTTON, false);
 
             // 타이틀 UI 보이기
-            uiManager.ShowUI(UIKey.UI_TITLEL_PANEL, true);
+            uiManager.ShowUI(UIKey.UI_TITLE_PANEL, true);
         }
 
         // BGM 변경 (타이틀 BGM이 있다면)
