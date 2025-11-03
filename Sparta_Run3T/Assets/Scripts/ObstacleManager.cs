@@ -13,7 +13,7 @@ public class ObstacleManager : MonoBehaviour
     private float timer = 0f;
     private GameObject[] obstaclePrefabs;
 
-    /* 난이도, 아이템별 속도 캐싱 */
+    /* 난이도, 아이템별 속도 변화 캐싱 */
     [Header("Speed Settings")]
     [SerializeField] private float cachedDifficultySpeed = 1.0f;
     [SerializeField] private float cachedItemSpeed = 1.0f;
@@ -73,17 +73,22 @@ public class ObstacleManager : MonoBehaviour
 
         Debug.Log($"Spawned: {newObstacle.name} at {spawnPos}");
 
-        Obstacle currentObstacle = newObstacle.GetComponent<Obstacle>();
-
-        /* 스폰된 장애물에 현재 속도 배율 적용 */
-        if (currentObstacle != null)
-        {
-            currentObstacle.SetDifficultySpeedMultiplier(cachedDifficultySpeed);
-            currentObstacle.SetItemSpeedMultiplier(cachedItemSpeed);
-        }
+        /* 새롭게 스폰된 장애물에 현재 속도 배율 적용 */
+        ApplySpeedToObstacle(newObstacle);
     }
 
 
+
+    /* 스폰된 장애물에 현재 속도 배율 적용 */
+    private void ApplySpeedToObstacle(GameObject obstacle)
+    {
+        Obstacle obstacleComponent = obstacle.GetComponent<Obstacle>();
+        if (obstacleComponent != null)
+        {
+            obstacleComponent.SetDifficultySpeedMultiplier(cachedDifficultySpeed);
+            obstacleComponent.SetItemSpeedMultiplier(cachedItemSpeed);
+        }
+    }
 
     /* 씬의 모든 장애물 제거 */
     public void ClearAllObstacles()
@@ -111,40 +116,45 @@ public class ObstacleManager : MonoBehaviour
         enabled = false;  /* Update 비활성화 */
     }
 
-    /* 난이도에 따른 기본 속도 배율 설정 (게임 시작 시, 한 번만) */
+    /* 난이도에 따른 기본 속도 배율 캐싱 from GameManager */
     public void SetDifficultySpeedMultiplier(float multiplier)
     {
         cachedDifficultySpeed = multiplier;
-        Debug.Log($"{gameObject.name} 난이도 속도 배율: {multiplier}배속");
     }
 
-    /* 아이템에 의한 일시적 속도 배율 설정 */
+    /* 아이템에 의한 일시적 속도 배율 캐싱 from GameManager */
     public void SetItemSpeedMultiplier(float multiplier)
     {
         cachedItemSpeed = multiplier;
     }
 
-    /* 난이도에 따른 모든 활성 장애물의 속도 조절 */
+    /* 이미 스폰된 장애물들에 난이도별 기본 속도 적용 */
     public void SetAllObstaclesDifficultySpeed(float multiplier)
     {
-        if (obstaclesParent == null) return;
-
-        var activeObstacles = obstaclesParent.GetComponentsInChildren<Obstacle>();
-        foreach (var obs in activeObstacles)
-        {
-            if (obs != null) obs.SetDifficultySpeedMultiplier(multiplier);
-        }
+        ApplySpeedToAllObstacles(multiplier, isDifficultySpeed: true);
     }
 
-    /* 아이템에 의한 모든 활성 장애물의 속도 조절 */
+    /* 이미 스폰된 장애물들에 아이템별 속도 변화 적용 */
     public void SetAllObstaclesItemSpeed(float multiplier)
+    {
+        ApplySpeedToAllObstacles(multiplier, isDifficultySpeed: false);
+    }
+
+    /* 스폰된 장애물(Obstacle.cs) 에 난이도, 아이템별 속도 값 적용 */
+    private void ApplySpeedToAllObstacles(float multiplier, bool isDifficultySpeed)
     {
         if (obstaclesParent == null) return;
 
         var activeObstacles = obstaclesParent.GetComponentsInChildren<Obstacle>();
         foreach (var obs in activeObstacles)
         {
-            if (obs != null) obs.SetItemSpeedMultiplier(multiplier);
+            if (obs != null)
+            {
+                if (isDifficultySpeed)
+                    obs.SetDifficultySpeedMultiplier(multiplier);
+                else
+                    obs.SetItemSpeedMultiplier(multiplier);
+            }
         }
     }
 }
