@@ -89,19 +89,6 @@ public class ObstacleManager : MonoBehaviour
         }
     }
 
-    /* 씬의 모든 장애물 제거 */
-    public void ClearAllObstacles()
-    {
-        if (obstaclesParent != null)
-        {
-            /* 부모 오브젝트(Obstacles) 의 모든 자식(각각의 장애물들) 제거 */
-            foreach (Transform child in obstaclesParent)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-    }
-
     /* 장애물 스폰 시작 */
     public void StartSpawning()
     {
