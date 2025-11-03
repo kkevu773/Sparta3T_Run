@@ -21,9 +21,16 @@ public class SpeedItem : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
         if (isSpeedUp)
+        {
+            GameManager.Instance.OnSpeedUpItemCollected(effectAmount, effectDuration);
             Debug.Log($"속도 증가 효과{effectAmount},{effectDuration}s");
+        }
         else
+        {
+            GameManager.Instance.OnSpeedDownItemCollected(effectAmount, effectDuration);
             Debug.Log($"속도 감소 효과{effectAmount},{effectDuration}s");
+        }
+            
 
         Destroy(gameObject);
     }
