@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
                 // D 키로 속도 감소 아이템 획득 테스트 (개발용 - 나중에 삭제)
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    OnSpeedDownItemCollected(0.5f, 5f);
+                    OnSpeedDownItemCollected(2f, 5f);
                 }
                 break;
 
