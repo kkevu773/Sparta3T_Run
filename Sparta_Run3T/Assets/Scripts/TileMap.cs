@@ -98,27 +98,6 @@ public class TileMap : MonoBehaviour
         isScrolling = false;
     }
 
-    /* 게임 재시작 시 타일맵 리셋 */
-    public void ResetTilemap()
-    {
-        /* 타일맵 위치 초기화 */
-        transform.position = Vector3.zero;
-
-        /* Cull 인덱스 초기화 */
-        for (int i = 0; i < tilemaps.Length; i++)
-        {
-            if (tilemaps[i] != null)
-            {
-                nextCullX[i] = tilemaps[i].cellBounds.xMin;
-            }
-        }
-
-        /* 스크롤 시작 */
-        isScrolling = true;
-
-        Debug.Log("타일맵 리셋 완료!");
-    }
-
     /* 난이도에 따른 기본 속도 배율 설정 (게임 시작 시, 한 번만) */
     public void SetDifficultySpeedMultiplier(float multiplier)
     {
