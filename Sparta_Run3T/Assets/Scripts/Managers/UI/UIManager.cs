@@ -42,6 +42,12 @@ public class UIManager : MonoBehaviour
     public Button btnRetry;
     public Button btnTitle;
 
+    [Header("난이도")]
+    public GameObject panelDifficulty;
+    public Button btnEasy;
+    public Button btnNormal;
+    public Button btnHard;
+
     private int currentScore;
     private int bestScore;
 
@@ -116,6 +122,38 @@ public class UIManager : MonoBehaviour
             sliderSFX.onValueChanged.AddListener(SFXChange);
         }
         Time.timeScale = 1f;
+
+        if (panelDifficulty != null)
+        {
+            panelDifficulty.SetActive(false);
+        }
+
+        if (btnEasy != null)
+        {
+            btnEasy.onClick.AddListener(() => SelectDifficulty(Difficulty.Easy));
+        }
+        if (btnNormal != null)
+        {
+            btnNormal.onClick.AddListener(() => SelectDifficulty(Difficulty.Normal));
+        }
+        if (btnHard != null)
+        {
+            btnHard.onClick.AddListener(() => SelectDifficulty(Difficulty.Hard));
+        }
+    }
+    private void SelectDifficulty(Difficulty diff)
+    {
+        AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
+        GameManager.Instance?.SetDifficulty(diff);
+        SceneManager.LoadScene("AraScene");
+    }
+
+    public void ShowDifficultyPanel(bool show)
+    {
+        if (panelDifficulty != null)
+        {
+            panelDifficulty.SetActive(show);
+        }
     }
 
     public void ShowGameOver(int score)
@@ -174,7 +212,9 @@ public class UIManager : MonoBehaviour
             Time.timeScale = paused ? 0f : 1f;
         }
         if (EventSystem.current != null)
+        {
             EventSystem.current.SetSelectedGameObject(null);
+        }
     }
     public void CloseSet()
     {
@@ -185,12 +225,36 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 1f;
         }
         if (EventSystem.current != null)
+        {
             EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     public void GoTitle()
     {
         Time.timeScale = 1f;
+        AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
+        var allRootObjs = UnityEngine.SceneManagement.SceneManager.GetActiveScene().GetRootGameObjects();
+        foreach (var rootObj in allRootObjs)
+        {
+            if (rootObj.scene.name == null)
+            {
+                Destroy(rootObj);
+            }
+        }
+
+        var managers = GameObject.FindObjectsOfType<GameManager>();
+        foreach (var m in managers)
+        {
+            Destroy(m.gameObject);
+        }
+
+        var audios = GameObject.FindObjectsOfType<AudioManager>();
+        foreach (var a in audios)
+        {
+            Destroy(a.gameObject);
+        }
+
         SceneManager.LoadScene("TitleScene");
     }
     public void ShowUI(UIKey key, bool show)
@@ -204,9 +268,38 @@ public class UIManager : MonoBehaviour
             go.SetActive(show);
         }
     }
+    public void OnClickDifficulty(string difficulty)
+    {
+        AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
+
+        switch (difficulty)
+        {
+            case "Easy":
+                GameManager.Instance.SetDifficulty(Difficulty.Easy);
+                break;
+            case "Normal":
+                GameManager.Instance.SetDifficulty(Difficulty.Normal);
+                break;
+            case "Hard":
+                GameManager.Instance.SetDifficulty(Difficulty.Hard);
+                break;
+        }
+
+        if (panelDifficulty != null)
+        {
+            panelDifficulty.SetActive(false);
+        }
+
+        SceneManager.LoadScene("AraScene");
+    }
     public void GoGame()
     {
-        SceneManager.LoadScene("ParkScene");
+        AudioManager.Instance.Play(SoundKey.SFX_UI_UICLICK);
+
+        if (panelDifficulty != null)
+        {
+            panelDifficulty.SetActive(true);
+        }
     }
     public void QuitGame()
     {
@@ -237,5 +330,14 @@ public class UIManager : MonoBehaviour
         }
 
         hpBar.value = (float)current / max;
+    }
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Debug.Log("마우스 클릭");
+        }
+        if (EventSystem.current == null)
+            Debug.LogError(" EventSystem 없음!");
     }
 }
