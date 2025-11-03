@@ -48,6 +48,9 @@ public class UIManager : MonoBehaviour
     public Button btnNormal;
     public Button btnHard;
 
+    [Header("카운트다운")]
+    public TextMeshProUGUI countdownText;
+
     private int currentScore;
     private int bestScore;
 
@@ -339,5 +342,24 @@ public class UIManager : MonoBehaviour
         }
         if (EventSystem.current == null)
             Debug.LogError(" EventSystem 없음!");
+    }
+
+    /* 카운트다운 텍스트 표시 (3, 2, 1, GO!) */
+    public void ShowCountdown(string text)
+    {
+        if (countdownText != null)
+        {
+            countdownText.text = text;
+            countdownText.gameObject.SetActive(true);
+        }
+    }
+
+    /* 카운트다운 텍스트 숨기기 */
+    public void HideCountdown()
+    {
+        if (countdownText != null)
+        {
+            countdownText.gameObject.SetActive(false);
+        }
     }
 }
