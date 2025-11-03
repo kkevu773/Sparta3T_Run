@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private BoxCollider2D bodyCol;
+    [SerializeField] private CapsuleCollider2D bodyCol;
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Transform groundCheck;
 
@@ -126,9 +126,9 @@ public class PlayerMove : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
 
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.Play(SoundKey.SFX_PLAYER_JUMP);
+            AudioManager.Instance.Play(SoundKey.SFX_PLAYER_JUMP);
         }
 
         if (isSecondJump)

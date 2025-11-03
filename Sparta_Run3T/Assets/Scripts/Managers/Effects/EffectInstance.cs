@@ -8,11 +8,16 @@ public class EffectInstance : MonoBehaviour
     public float lifeTime = 1.0f;
     public bool useUnscaledTime = false;
 
+    [Header("위치 조정")]
+    public Vector3 positionOffset;
+
     private float timer = 0f;
 
     private void OnEnable()
     {
         timer = 0;
+        transform.position += positionOffset;
+
     }
 
     // Start is called before the first frame update
@@ -27,7 +32,7 @@ public class EffectInstance : MonoBehaviour
         timer += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
         if (timer > lifeTime)
         {
-            gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 }

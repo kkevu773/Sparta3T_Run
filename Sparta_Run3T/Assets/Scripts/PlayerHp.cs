@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,9 +40,9 @@ public class PlayerHp : MonoBehaviour
         }
 
         /* 피격 사운드 재생 */
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.Play(SoundKey.SFX_OBSTACLE_HIT);
+            AudioManager.Instance.Play(SoundKey.SFX_OBSTACLE_HIT);
         }
 
         if (Hp <= 0) 
@@ -148,4 +149,27 @@ public class PlayerHp : MonoBehaviour
         Die();
     }
 
+    /* 체력 회복 */
+    public void Heal(int amount)
+    {
+        int oldHp = Hp;
+        Hp = Mathf.Min(Hp + amount, maxHp);  /* 최대 체력 초과 안 되게 */
+
+        int actualHeal = Hp - oldHp;
+
+        if (actualHeal > 0)
+        {
+            Debug.Log($"체력 회복! {oldHp} → {Hp} (+{actualHeal})");
+
+            /* UI 업데이트 */
+            if (UIManager.Instance != null)
+            {
+                UIManager.Instance.UpdateHP(Hp, maxHp);
+            }
+        }
+        else
+        {
+            Debug.Log("체력이 이미 최대치입니다!");
+        }
+    }
 }

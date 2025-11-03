@@ -1,4 +1,4 @@
-﻿// Simplified SDF shader:
+// Simplified SDF shader:
 // - No Shading Option (bevel / bump / env map)
 // - No Glow Option
 // - Softness is applied on both side of the outline
@@ -9,8 +9,8 @@ Properties {
 	[HDR]_FaceColor     ("Face Color", Color) = (1,1,1,1)
 	_FaceDilate			("Face Dilate", Range(-1,1)) = 0
 
-	[HDR]_OutlineColor	("Outline Color", Color) = (0,0,0,1)
-	_OutlineWidth		("Outline Thickness", Range(0,1)) = 0
+	[HDR]_OutlineColor	("Outline Color", Color) = (0,0,0,0)
+	_OutlineWidth		("Outline Thickness", Range(0,1)) = 0.25
 	_OutlineSoftness	("Outline Softness", Range(0,1)) = 0
 
 	[HDR]_UnderlayColor	("Border Color", Color) = (0,0,0,.5)

@@ -6,7 +6,7 @@ public enum UIKey
 {
     None,
     #region 타이틀
-    UI_TITLEL_PANEL,
+    UI_TITLE_PANEL,
     UI_TITLE_PLAY_BUTTON,
     UI_TITLE_EXIT_BUTTON,
     UI_TITLE_SETTING_BUTTON,

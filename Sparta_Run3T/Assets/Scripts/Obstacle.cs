@@ -20,12 +20,20 @@ public class Obstacle : MonoBehaviour
     /* 장애물 이동/정지 구분 */
     private bool canMove = true;
 
+    /* 난이도, 아이템별 속도 조절용 */
+    [Header("Speed Settings")]
+    [SerializeField] private float difficultySpeedMultiplier = 1.0f;
+    [SerializeField] private float itemSpeedMultiplier = 1.0f;
+
     private void Update()
     {
         /* canMove == false => 바로 return */
         if (!canMove) return;
 
-        transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
+        /* 최종 속도 = 기본 속도 * 난이도 배율 * 아이템 배율 */
+        float appliedSpeed = moveSpeed * difficultySpeedMultiplier * itemSpeedMultiplier;
+
+        transform.Translate(Vector3.left * appliedSpeed * Time.deltaTime);
 
         if (transform.position.x <= destroyX)
         {
@@ -75,5 +83,17 @@ public class Obstacle : MonoBehaviour
     public void StartMoving()
     {
         canMove = true;
+    }
+
+    /* 난이도에 따른 기본 속도 배율 설정 from ObstacleManager */
+    public void SetDifficultySpeedMultiplier(float multiplier)
+    {
+        difficultySpeedMultiplier = multiplier;
+    }
+
+    /* 아이템에 의한 일시적 속도 배율 설정 from ObstacleManager */
+    public void SetItemSpeedMultiplier(float multiplier)
+    {
+        itemSpeedMultiplier = multiplier;
     }
 }
