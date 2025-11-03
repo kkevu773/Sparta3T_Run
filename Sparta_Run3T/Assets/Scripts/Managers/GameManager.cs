@@ -78,8 +78,9 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 씬이 로드된 후 매니저 참조들을 다시 찾아서 연결
+
         StartCoroutine(ReconnectManagerReferences());
+
     }
 
     private void Start()
@@ -757,5 +758,37 @@ public class GameManager : MonoBehaviour
         {
             itemManager.SetItemSpeedMultiplier(multiplier);
         }
+    }
+    public void GameClear()
+    {
+        if (currentState != GameState.Playing)
+        {
+            return;
+        }
+
+        Debug.Log("게임 클리어");
+        currentState = GameState.GameOver;
+
+        StopAllSpawners();
+        if (bgManager != null)
+        {
+            bgManager.StopScroll();
+        }
+        if (tileMap != null)
+        {
+            tileMap.StopScroll();
+        }
+        if (player != null)
+        {
+            player.StopPlaying();
+        }
+
+        SaveBestScoreIfNeeded();
+        if (uiManager != null)
+        {
+            uiManager.ShowGameOver(scoreManager != null ? scoreManager.GetScore() : 0);
+        }
+
+        AudioManager.Instance.Play(SoundKey.SFX_UI_GAMEOVER);
     }
 }
