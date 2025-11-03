@@ -723,10 +723,11 @@ public class GameManager : MonoBehaviour
             spawnManager.SetAllCoinsDifficultySpeed(multiplier);
         }*/
 
-        // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
+        // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)
         {
             itemManager.SetDifficultySpeedMultiplier(multiplier);
+            itemManager.SetAllItemsDifficultySpeed(multiplier);
         }
     }
 
@@ -759,10 +760,11 @@ public class GameManager : MonoBehaviour
             spawnManager.SetAllCoinsItemSpeed(multiplier);
         }*/
 
-        // 아이템 매니저 속도 변경 (스폰된 아이템들도 자동 적용)
+        // 아이템 속도 변경 (매니저 캐시 업데이트 + 이미 스폰된 아이템들도 실시간 적용)
         if (itemManager != null)
         {
             itemManager.SetItemSpeedMultiplier(multiplier);
+            itemManager.SetAllItemsItemSpeed(multiplier);
         }
     }
 }
