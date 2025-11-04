@@ -75,9 +75,7 @@
 
 ### 오디오 매니저 
 
-## 🎧 AudioManager
-
-> [AudioManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/AudioManager.cs)
+##  AudioManager
 
 ###  개요
 `AudioManager`는 **배경음(BGM)**과 **효과음(SFX)**을 모두 통합 관리하는 중앙 사운드 매니저입니다.  
@@ -101,24 +99,127 @@
 ```csharp
 if (soundDic.TryGetValue(key, out AudioSource src))
 {
-    src.PlayOneShot(src.clip, src.volume);  // 실시간 볼륨 반영
+    src.PlayOneShot(src.clip, src.volume);
 }
 ```
-
+BGM은 루프, SFX는 PlayOneShot으로 단발 재생하되, SFX에도 실시간으로 볼륨 조절이 반영되도록 직접 전달.
 
 > [AudioManager.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/AudioManager.cs)  
 > [SoundInstace.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/SoundInstace.cs)  
 > [SoundKey.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/SoundKey.cs)
-> 
+
+##  이펙트 매니저
+
+###  개요
+`EffectManager`는 **이펙트(파티클, 시각 효과)**를 통합 관리하는 매니저입니다.  
+플레이어 동작, 아이템 획득, 충돌 이벤트 등에서 발생하는 비주얼 효과를  
+Enum 기반으로 요청받아 자동으로 생성·제거합니다.
+
+---
+
+###  구조
+| 구성 요소 | 설명 |
+|------------|------|
+| `EffectPair` | `EffectKey`와 프리팹을 연결한 구조체. Inspector에서 설정 |
+| `effectDic` | Enum 키를 기준으로 프리팹을 빠르게 탐색하는 Dictionary |
+| `Play()` | 일반 이펙트 재생. 위치 지정 후 자동 파괴(`EffectInstance` 내부 타이머) |
+| `PlayUI()` | UI 전용 이펙트 (Canvas 자식으로 붙음) |
+| `PlayLoop()` | 루프형 이펙트. 외부에서 수동으로 Stop 호출 필요 |
+| `Stop()` | 루프 이펙트를 비활성화하거나 제거할 때 사용 |
+
+---
+
+###  핵심 코드
+```csharp
+if (effectDic.TryGetValue(key, out GameObject prefab))
+{
+    GameObject effect = Instantiate(prefab, pos, Quaternion.identity);
+}
+```
+`EffectManager`는 `Enum` 키로 프리펩을 찾아 자동 생성 후 `EffectInstance`로 자동 파괴한다.
 > [EffectInstance.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Effects/EffectInstance.cs)  
 > [EffectKey.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Effects/EffectKey.cs)  
 > [EffectManager.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Effects/EffectManager.cs)  
 > [EffectPair.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Effects/EffectPair.cs)
-> 
+
+## UI매니저
+
+###  개요
+`UIManager`는 게임 내 모든 **UI 요소(HUD, 설정창, 결과창, 난이도 선택창)**를 관리하는 핵심 매니저입니다.  
+버튼, 슬라이더, 텍스트를 한 곳에서 제어하며,  
+오디오와 게임 상태(GameManager) 흐름을 연결하는 **시청각 인터페이스의 허브 역할**을 합니다.
+
+---
+
+###  구조
+| 구성 요소 | 설명 |
+|------------|------|
+| `UIPair` | `UIKey`와 GameObject를 묶은 구조체. Inspector에서 직접 등록 |
+| `uiDic` | UIKey 기준으로 GameObject를 빠르게 찾는 Dictionary |
+| `ShowUI()` | 개별 UI 표시/숨김 제어 |
+| `ToggleSet()` / `CloseSet()` | 설정창 열기/닫기 및 일시정지 관리 (`Time.timeScale` 제어 포함) |
+| `ShowGameOver()` | 점수 표시, 최고 기록 비교 및 결과창 활성화 |
+| `UpdateScore()` / `UpdateBestScore()` / `UpdateHP()` | HUD 실시간 갱신 |
+| `sliderBGM`, `sliderSFX` | 오디오 볼륨 제어 슬라이더 (AudioManager와 직접 연동) |
+| `ShowCountdown()` / `HideCountdown()` | 카운트다운 텍스트 표시 및 숨김 |
+| `ShowDifficultyPanel()` / `SelectDifficulty()` | 난이도 선택 메뉴 관리 (GameManager 연동) |
+
+---
+
+###  핵심 코드
+```csharp
+sliderBGM.onValueChanged.AddListener(BGMChange);
+sliderSFX.onValueChanged.AddListener(SFXChange);
+
+private void BGMChange(float value)
+{
+    AudioManager.Instance.SetBGMVolume(value);
+}
+
+private void SFXChange(float value)
+{
+    AudioManager.Instance.SetSFXVolume(value);
+}
+```
+오디오매니저와 게임매니저와 직접적으로 연결이 되어 있어서 HUD, 게임 오버 UI등을 제어한다.
+
 > [UIKey.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/UI/UIKey.cs)  
 > [UIManager.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/UI/UIManager.cs)  
 > [UIPair.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/UI/UIPair.cs)
-> 
+
+## 목적지
+
+> [Goal.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/Goal.cs)
+
+###  개요
+`Goal` 스크립트는 플레이어가 **도착 지점(Goal 오브젝트)**에 닿았을 때  
+게임 클리어 상태를 GameManager로 전달하는 역할을 합니다.  
+즉, **게임 오버(실패)**와 반대되는 **게임 클리어(성공)** 트리거입니다.
+
+---
+
+###  구조
+| 구성 요소 | 설명 |
+|------------|------|
+| `OnTriggerEnter2D()` | 플레이어가 Goal 영역에 진입했을 때 호출 |
+| `AudioManager.Instance.Play()` | 도착 시 효과음 재생 |
+| `GameManager.Instance.GameClear()` | GameManager에 클리어 상태 보고 |
+
+---
+
+###  핵심 코드
+```csharp
+private void OnTriggerEnter2D(Collider2D collision)
+{
+    if (collision.CompareTag("Player"))
+    {
+        Debug.Log("Goal");
+        AudioManager.Instance.Play(SoundKey.SFX_UI_GAMEOVER);
+        GameManager.Instance.GameClear();
+    }
+}
+```
+플레이어의 충돌 이벤트를 감지하여 `GameManager`에게 게임 클리어 상태를 전달한다.
 > [Goal.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Goal.cs)
 
 
