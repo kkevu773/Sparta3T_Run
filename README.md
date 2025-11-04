@@ -69,13 +69,11 @@
 
 ## 박영재
 
-시청각을 관장하는 3개의 매니저 구상
-<img width="441" height="162" alt="매니저들 차이 drawio" src="https://github.com/user-attachments/assets/a1a2ed79-02be-401a-98b4-4bbe209d0cfe" />
-중앙 관리자인 GameManager의 구조를 유지하면서 설계
+- 시청각을 관장하는 3개의 매니저 구상
+> <img width="441" height="162" alt="매니저들 차이 drawio" src="https://github.com/user-attachments/assets/a1a2ed79-02be-401a-98b4-4bbe209d0cfe" />
+- 중앙 관리자인 GameManager의 구조를 유지하면서 설계
 
-### 오디오 매니저 
-
-##  AudioManager
+## 오디오 매니저 
 
 ###  개요
 `AudioManager`는 **배경음(BGM)**과 **효과음(SFX)**을 모두 통합 관리하는 중앙 사운드 매니저입니다.  
