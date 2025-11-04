@@ -108,27 +108,6 @@ private void TryJump()
 
 나머지는 runA, runB를 runFrameTime 간격으로 토글해서 러닝 애니메이션.
 
-- **4) 회전 이펙트 (더블 점프 연출)**
-
-더블 점프 시작 시 spinActive를 켜고 현재 Z 회전 값을 저장.
-
-spinDuration 동안 0 → 360도까지 회전시키며 한 바퀴 도는 연출.
-
-시간이 끝나면 회전 값과 플래그 초기화.
-
-- **5) 바닥 체크 & 낙사 처리**
-
-groundCheck 위치 기준으로 원형 영역을 검사해
-groundLayer에 닿아 있으면 바닥으로 판정.
-
-바닥에 닿고, 세로 속도가 0 이하이면 점프 카운트·회전 이펙트 초기화.
-
-Y좌표가 deathY 이하로 떨어지면 낙사 처리:
-
-PlayerHp가 있으면 KillByFall() 호출해 UI·사운드·게임오버를 일괄 처리.
-
-없으면 바로 GameManager.GameOver() 호출.
-
 ## [조아라]
 - **`GameManager.cs`**
   - **게임 흐름 관리 :** 게임 진행 단계별 메서드 분리 및 `enum GameState` 를 정의하여 관리
