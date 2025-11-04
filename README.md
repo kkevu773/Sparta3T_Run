@@ -1,11 +1,11 @@
 # 프로젝트 소개 
-- 프로젝트명 : AilenRun
-- 프로젝트 설명 : 쿠키런과 같은 2D 횡스크롤 러닝 게임
+- **프로젝트명 :** AilenRun
+- **프로젝트 설명 :** 쿠키런과 같은 2D 횡스크롤 러닝 게임
 
 
 # 역할 분담
 - 김상혁: Player 움직임
-- 조아라: 게임시스템 및 git관리
+- 조아라: 게임 시스템 및 git관리
 - 박영재: 시청각 매니저
 - 정성재: 배경움직임
 - 함승효: 몬스터 리스폰
@@ -39,6 +39,10 @@
 
 ## 조아라
 - `GameManager.cs`
+  - 게임 흐름 관리
+  - 난이도 시스템
+  - 각각의 오브젝트 속도 제어
+  - 플레이 기록 저장
   ```cs
   ```
 > [GameManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/GameManager.cs)
