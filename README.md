@@ -38,6 +38,10 @@
 ## 김상혁
 
 ## 조아라
+- `GameManager.cs`
+  ```cs
+  ```
+> [GameManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/GameManager.cs)
 
 ## 함승효
 
