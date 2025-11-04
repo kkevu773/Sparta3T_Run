@@ -17,16 +17,8 @@ public class EffectInstance : MonoBehaviour
     {
         timer = 0;
         transform.position += positionOffset;
-
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         timer += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;

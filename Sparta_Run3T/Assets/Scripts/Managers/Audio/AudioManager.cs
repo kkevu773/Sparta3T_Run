@@ -58,7 +58,7 @@ public class AudioManager : MonoBehaviour
 
     public void PlayOneShot(SoundKey key)
     {
-        if(soundDic.TryGetValue(key, out AudioSource src))
+        if (soundDic.TryGetValue(key, out AudioSource src))
         {
             float volume = src.volume;
             src.PlayOneShot(src.clip, volume);
@@ -75,7 +75,6 @@ public class AudioManager : MonoBehaviour
             src.Play();
             currentBGM = src;
         }
-
     }
 
     public void StopAllBGM()
@@ -129,17 +128,5 @@ public class AudioManager : MonoBehaviour
                 pair.Value.volume = volume;
             }
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
