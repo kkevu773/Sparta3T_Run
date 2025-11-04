@@ -9,4 +9,3 @@ using UnityEngine;
         public UIKey key;
         public GameObject uiObject;
     }
-    // Start is called before the first frame update
