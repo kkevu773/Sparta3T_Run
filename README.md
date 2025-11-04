@@ -69,6 +69,43 @@
 
 ## 박영재
 
+시청각을 관장하는 3개의 매니저 구상
+<img width="441" height="162" alt="매니저들 차이 drawio" src="https://github.com/user-attachments/assets/a1a2ed79-02be-401a-98b4-4bbe209d0cfe" />
+중앙 관리자인 GameManager의 구조를 유지하면서 설계
+
+### 오디오 매니저 
+
+## 🎧 AudioManager
+
+> [AudioManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/AudioManager.cs)
+
+###  개요
+`AudioManager`는 **배경음(BGM)**과 **효과음(SFX)**을 모두 통합 관리하는 중앙 사운드 매니저입니다.  
+모든 오디오 재생은 이 스크립트를 거치며, 다른 스크립트에서는 직접 `AudioSource`를 제어하지 않습니다.
+
+---
+
+###  구조
+| 구성 요소 | 설명 |
+|------------|------|
+| `SoundPair` | `SoundKey`와 `AudioSource`를 묶은 구조체. Inspector에서 연결함 |
+| `soundDic` | Enum 키 기반으로 빠르게 사운드를 찾아 재생하기 위한 Dictionary |
+| `Play()` | 효과음(SFX) 재생용. 내부적으로 `PlayOneShot` 사용 |
+| `PlayBGM()` | 배경음(BGM) 전용. 루프 재생 및 중복 방지 기능 포함 |
+| `SetBGMVolume()` / `SetSFXVolume()` | 슬라이더 연동으로 실시간 볼륨 조절 |
+| `StopAllBGM()` | 모든 배경음 정지 (씬 전환 시 사용) |
+
+---
+
+###  핵심 코드
+```csharp
+if (soundDic.TryGetValue(key, out AudioSource src))
+{
+    src.PlayOneShot(src.clip, src.volume);  // 실시간 볼륨 반영
+}
+```
+
+
 > [AudioManager.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/AudioManager.cs)  
 > [SoundInstace.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/SoundInstace.cs)  
 > [SoundKey.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/SoundKey.cs)
