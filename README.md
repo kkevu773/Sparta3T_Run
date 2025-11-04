@@ -74,15 +74,15 @@
 - 중앙 관리자인 GameManager의 구조를 유지하면서 설계
 > <img width="611" height="267" alt="단방향 싱글톤 drawio" src="https://github.com/user-attachments/assets/939d22e0-232e-4ca6-93c2-dc94d6ecbbac" />
 
-## 오디오 매니저 
+- ## 오디오 매니저 
 
-###  개요
+- ###  개요
 `AudioManager`는 **배경음(BGM)**과 **효과음(SFX)**을 모두 통합 관리하는 중앙 사운드 매니저입니다.  
 모든 오디오 재생은 이 스크립트를 거치며, 다른 스크립트에서는 직접 `AudioSource`를 제어하지 않습니다.
 
 ---
 
-###  구조
+- ###  구조
 | 구성 요소 | 설명 |
 |------------|------|
 | `SoundPair` | `SoundKey`와 `AudioSource`를 묶은 구조체. Inspector에서 연결함 |
@@ -94,7 +94,7 @@
 
 ---
 
-###  핵심 코드
+- ###  핵심 코드
 ```csharp
 if (soundDic.TryGetValue(key, out AudioSource src))
 {
@@ -116,7 +116,7 @@ Enum 기반으로 요청받아 자동으로 생성·제거합니다.
 
 ---
 
-###  구조
+- ###  구조
 | 구성 요소 | 설명 |
 |------------|------|
 | `EffectPair` | `EffectKey`와 프리팹을 연결한 구조체. Inspector에서 설정 |
@@ -128,7 +128,7 @@ Enum 기반으로 요청받아 자동으로 생성·제거합니다.
 
 ---
 
-###  핵심 코드
+- ###  핵심 코드
 ```csharp
 if (effectDic.TryGetValue(key, out GameObject prefab))
 {
@@ -141,16 +141,16 @@ if (effectDic.TryGetValue(key, out GameObject prefab))
 > [EffectManager.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Effects/EffectManager.cs)  
 > [EffectPair.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Effects/EffectPair.cs)
 
-## UI매니저
+- ## UI매니저
 
-###  개요
+- ###  개요
 `UIManager`는 게임 내 모든 **UI 요소(HUD, 설정창, 결과창, 난이도 선택창)**를 관리하는 핵심 매니저입니다.  
 버튼, 슬라이더, 텍스트를 한 곳에서 제어하며,  
 오디오와 게임 상태(GameManager) 흐름을 연결하는 **시청각 인터페이스의 허브 역할**을 합니다.
 
 ---
 
-###  구조
+- ###  구조
 | 구성 요소 | 설명 |
 |------------|------|
 | `UIPair` | `UIKey`와 GameObject를 묶은 구조체. Inspector에서 직접 등록 |
@@ -165,7 +165,7 @@ if (effectDic.TryGetValue(key, out GameObject prefab))
 
 ---
 
-###  핵심 코드
+- ###  핵심 코드
 ```csharp
 sliderBGM.onValueChanged.AddListener(BGMChange);
 sliderSFX.onValueChanged.AddListener(SFXChange);
@@ -186,18 +186,18 @@ private void SFXChange(float value)
 > [UIManager.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/UI/UIManager.cs)  
 > [UIPair.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/UI/UIPair.cs)
 
-## 목적지
+- ## 목적지
 
 > [Goal.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/Goal.cs)
 
-###  개요
+- ###  개요
 `Goal` 스크립트는 플레이어가 **도착 지점(Goal 오브젝트)**에 닿았을 때  
 게임 클리어 상태를 GameManager로 전달하는 역할을 합니다.  
 즉, **게임 오버(실패)**와 반대되는 **게임 클리어(성공)** 트리거입니다.
 
 ---
 
-###  구조
+- ###  구조
 | 구성 요소 | 설명 |
 |------------|------|
 | `OnTriggerEnter2D()` | 플레이어가 Goal 영역에 진입했을 때 호출 |
@@ -206,7 +206,7 @@ private void SFXChange(float value)
 
 ---
 
-###  핵심 코드
+- ###  핵심 코드
 ```csharp
 private void OnTriggerEnter2D(Collider2D collision)
 {
