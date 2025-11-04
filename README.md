@@ -1,19 +1,19 @@
 # AilenRun
 쿠키런 모방 게임
 
-# <소개>
+# 소개
 
-# <역할 분담>
+# 역할 분담
 - 김상혁: Player 움직임
 - 조아라: 게임시스템 및 git관리
 - 박영재: 시청각 매니저
 - 정성재: 배경움직임
 - 함승효: 몬스터 리스폰
 
-# <와이어 프레임>
+# 와이어 프레임
 <img width="3664" height="1784" alt="W5Team3WireFrame" src="https://github.com/user-attachments/assets/d0265251-1230-46ba-ad1e-214a5dd88ce6" />
 
-# <구현 기능>
+# 구현 기능
 - **캐릭터 자동 이동** 
     - 캐릭터가 일정한 속도로 자동 전진
     - 속도는 난이도에 따라 점진적으로 증가
@@ -33,7 +33,7 @@
     - 장애물에 부딪히거나 체력이 소진되면 게임 종료
     - 플레이어가 점수를 확인하고 다시 시작 가능
 
- # <구현 목록>
+ # 구현 목록
 ## 김상혁
 
 ## 조아라
@@ -44,7 +44,7 @@
 
 ## 박영재
 
- # <예시 이미지 / 영상>
+ # 예시 이미지 / 영상
   https://kenney.nl/assets 에셋스토어 활용
   <img width="918" height="515" alt="Sample A" src="https://github.com/user-attachments/assets/75a77e6f-9d54-497b-ba42-8fedebc066a6" />
 
