@@ -4,11 +4,11 @@
 
 
 # 역할 분담
-- 김상혁: Player 움직임
-- 조아라: 게임 시스템 및 git관리
-- 박영재: 시청각 매니저
-- 정성재: 배경움직임
-- 함승효: 몬스터 리스폰
+- **김상혁 :** Player 움직임
+- **조아라 :** 게임 시스템 및 git관리
+- **박영재 :** 시청각 매니저
+- **정성재 :** 배경움직임
+- **함승효 :** 몬스터 리스폰
 
 
 # 와이어 프레임
@@ -40,11 +40,27 @@
 ## 조아라
 - `GameManager.cs`
   - 게임 흐름 관리
-  - 난이도 시스템
+    <img width="1421" height="351" alt="W5 팀플 클래스 구조도 drawio (4)" src="https://github.com/user-attachments/assets/64c7ea52-eafb-4d0c-a400-211072b89f92" />
+
+  - 난이도 시스템 : `GameManager` 내에서 `enum` 으로 관리
+    ```cs
+    public enum Difficulty
+    {
+        Easy,       // 쉬움 (0.8배속)
+        Normal,     // 보통 (1배속)
+        Hard        // 어려움 (1.2배속)
+    }
+    ```
+    
   - 각각의 오브젝트 속도 제어
+    ```cs
+    
+    ```
+    
   - 플레이 기록 저장
-  ```cs
-  ```
+    ```cs
+    
+    ```
 > [GameManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/GameManager.cs)
 
 ## 함승효
