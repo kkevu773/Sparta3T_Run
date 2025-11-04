@@ -1,7 +1,7 @@
-# AilenRun
-쿠키런 모방 게임
+# 프로젝트 소개 
+- 프로젝트명 : AilenRun
+- 프로젝트 설명 : 쿠키런과 같은 2D 횡스크롤 러닝 게임
 
-# 소개
 
 # 역할 분담
 - 김상혁: Player 움직임
@@ -9,6 +9,7 @@
 - 박영재: 시청각 매니저
 - 정성재: 배경움직임
 - 함승효: 몬스터 리스폰
+
 
 # 와이어 프레임
 <img width="3664" height="1784" alt="W5Team3WireFrame" src="https://github.com/user-attachments/assets/d0265251-1230-46ba-ad1e-214a5dd88ce6" />
