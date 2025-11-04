@@ -41,7 +41,7 @@
 - 플레이어의 점프 / 더블 점프 / 슬라이드 / 애니메이션을 전담하는 스크립트.
 GameManager, PlayerHp와 연동해서 낙사 처리와 게임오버까지 연결.
 
-- **1) 점프 · 더블 점프 처리`**
+- **1) 점프 · 더블 점프 처리**
 
 maxJumps만큼 점프 가능 (기본 2회).
 
@@ -52,7 +52,41 @@ maxJumps만큼 점프 가능 (기본 2회).
 
 점프 성공 시 점프 사운드 재생
 
-- **2) 슬라이드 + 콜라이더 변경`**
+    ```// 바닥에 닿았을 때 점프/회전 상태 초기화 (Update 내부)
+if (isGrounded && rb.velocity.y <= 0f)
+{
+    jumpCount = 0;
+    spinActive = false;
+    doubleJumpFX = false;
+    sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRZ);
+}
+
+// 점프 시도
+private void TryJump()
+{
+    if (jumpCount >= maxJumps) return;
+
+    bool isSecondJump = (jumpCount == 1);
+
+    // 세로 속도 초기화 후 위로 힘 추가
+    rb.velocity = new Vector2(rb.velocity.x, 0f);
+    rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+    // 점프 사운드 재생
+    if (AudioManager.Instance != null)
+    {
+        AudioManager.Instance.Play(SoundKey.SFX_PLAYER_JUMP);
+    }
+
+    // 두 번째 점프일 때만 회전 연출
+    if (isSecondJump)
+        StartDoubleJumpFX();
+
+    jumpCount++;
+}
+    ```
+
+- **2) 슬라이드 + 콜라이더 변경**
 
 슬라이드 키를 누르면 isSliding 활성화,
 캡슐 콜라이더의 size, offset을 슬라이드용 값으로 교체.
@@ -62,7 +96,7 @@ maxJumps만큼 점프 가능 (기본 2회).
 
 키를 떼면 다시 원래 콜라이더/위치로 복구.
 
-- **3) 애니메이션 스프라이트 전환`**
+- **3) 애니메이션 스프라이트 전환**
 
 우선순위는 더블 점프 > 공중 > 슬라이드 > 달리기.
 
@@ -74,7 +108,7 @@ maxJumps만큼 점프 가능 (기본 2회).
 
 나머지는 runA, runB를 runFrameTime 간격으로 토글해서 러닝 애니메이션.
 
-- **4) 회전 이펙트 (더블 점프 연출)`**
+- **4) 회전 이펙트 (더블 점프 연출)**
 
 더블 점프 시작 시 spinActive를 켜고 현재 Z 회전 값을 저장.
 
@@ -82,7 +116,7 @@ spinDuration 동안 0 → 360도까지 회전시키며 한 바퀴 도는 연출.
 
 시간이 끝나면 회전 값과 플래그 초기화.
 
-- **5) 바닥 체크 & 낙사 처리`**
+- **5) 바닥 체크 & 낙사 처리**
 
 groundCheck 위치 기준으로 원형 영역을 검사해
 groundLayer에 닿아 있으면 바닥으로 판정.
