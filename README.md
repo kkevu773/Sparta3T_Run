@@ -2,11 +2,11 @@
 쿠키런 모방 게임
 
 <역할 분담>
-김상혁: Player 움직임
-조아라: 게임시스템 및 git관리
-박영재: 시청각 매니저
-정성재: 배경움직임
-함승효: 몬스터 리스폰
+- 김상혁: Player 움직임
+- 조아라: 게임시스템 및 git관리
+- 박영재: 시청각 매니저
+- 정성재: 배경움직임
+- 함승효: 몬스터 리스폰
 
 <와이어 프레임>
 <img width="3664" height="1784" alt="W5Team3WireFrame" src="https://github.com/user-attachments/assets/d0265251-1230-46ba-ad1e-214a5dd88ce6" />
