@@ -35,9 +35,9 @@
     - 플레이어가 점수를 확인하고 다시 시작 가능
 
  # 구현 목록
-## 김상혁
+## [김상혁]
 
-## 조아라
+## [조아라]
 - `GameManager.cs`
   - 게임 흐름 관리
     <img width="1421" height="351" alt="W5 팀플 클래스 구조도 drawio (4)" src="https://github.com/user-attachments/assets/64c7ea52-eafb-4d0c-a400-211072b89f92" />
@@ -63,11 +63,11 @@
     ```
 > [GameManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/GameManager.cs)
 
-## 함승효
+## [함승효]
 
-## 정성재
+## [정성재]
 
-## 박영재
+## [박영재]
 
 - 시청각을 관장하는 3개의 매니저 구상
 > <img width="441" height="162" alt="매니저들 차이 drawio" src="https://github.com/user-attachments/assets/a1a2ed79-02be-401a-98b4-4bbe209d0cfe" />
