@@ -38,11 +38,21 @@
 ## [김상혁]
 
 ## [조아라]
-- `GameManager.cs`
-  - 게임 흐름 관리
+- **`GameManager.cs`**
+  - **게임 흐름 관리 :** 게임 진행 단계별 메서드 분리 및 `enum GameState` 를 정의하여 관리
     <img width="1421" height="351" alt="W5 팀플 클래스 구조도 drawio (4)" src="https://github.com/user-attachments/assets/64c7ea52-eafb-4d0c-a400-211072b89f92" />
+    ```cs
+    public enum GameState
+    {
+        CountDown,  // 출발 전 카운트다운
+        Playing,    // 게임 플레이 중
+        GameOver    // 게임 오버
+    }
+    ```
 
-  - 난이도 시스템 : `GameManager` 내에서 `enum` 으로 관리
+  <br>
+
+  - **난이도 시스템 :** `GameManager` 내 `enum Difficulty` 를 정의하여 관리
     ```cs
     public enum Difficulty
     {
@@ -51,15 +61,60 @@
         Hard        // 어려움 (1.2배속)
     }
     ```
-    
-  - 각각의 오브젝트 속도 제어
+  <br>
+
+  - **각각의 오브젝트 속도 제어 :** 난이도별 기본 배율, 획득 아이템별 배율을 따로 두어 다양한 속도감의 플레이 경험 제공
     ```cs
-    
+    private float difficultySpeedFactor = 1f;       // 난이도에 따른 기본 고정 속도 배율
+    private float itemSpeedMultiplier = 1f;         // 아이템에 의한 일시적인 속도 배율
+
+    ...
+
+    // 난이도에 따른 속도 배율 설정
+    public void SetDifficulty(Difficulty difficulty) { ... }
+
+    // 모든 매니저들에게 난이도 속도 배율 적용
+    private void ApplyDifficultySpeedToAll(float multiplier) { ... }
+
+    // 획득한 아이템에 따른 속도 배율 설정
+    public void OnSpeedUpItemCollected(float multiplier, float duration) { ... }
+    public void OnSpeedDownItemCollected(float multiplier, float duration) { ... }
+
+    // 코루틴을 활용한 일시적 배속 처리
+    private IEnumerator ApplySpeedEffect(float multiplier, float duration, bool isSpeedUp) { ... }
+
+    // 모든 매니저들에게 획득 아이템 속도 배율 적용
+    private void ApplyItemSpeedToAll(float multiplier) { ... }
     ```
-    
-  - 플레이 기록 저장
+
+  <br>
+
+  - **플레이 기록 저장 :** `PlayerPrefs` 를 활용한 최고 점수 기록 시스템
     ```cs
+    // PlayerPrefs 호출용 key string
+    private const string BEST_SCORE_KEY = "BestScore";
+
+    ...
+
+    // 최고 점수 불러오기
+    private void LoadBestScore()
+    {
+        bestScore = PlayerPrefs.GetInt(BEST_SCORE_KEY, 0);
+    }
+
+    // 현재 점수와 비교해 필요하면 저장
+    private void SaveBestScoreIfNeeded()
+    {
+        if (scoreManager == null) return;
     
+        int currentScore = scoreManager.GetScore();
+        if (currentScore > bestScore)
+        {
+            bestScore = currentScore;
+            PlayerPrefs.SetInt(BEST_SCORE_KEY, bestScore);
+            PlayerPrefs.Save();
+        }
+    }
     ```
 > [GameManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/GameManager.cs)
 
