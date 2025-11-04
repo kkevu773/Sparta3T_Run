@@ -107,9 +107,9 @@ BGM은 루프, SFX는 PlayOneShot으로 단발 재생하되, SFX에도 실시간
 > [SoundInstace.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/SoundInstace.cs)  
 > [SoundKey.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Audio/SoundKey.cs)
 
-##  이펙트 매니저
+- ##  이펙트 매니저
 
-###  개요
+- ###  개요
 `EffectManager`는 **이펙트(파티클, 시각 효과)**를 통합 관리하는 매니저입니다.  
 플레이어 동작, 아이템 획득, 충돌 이벤트 등에서 발생하는 비주얼 효과를  
 Enum 기반으로 요청받아 자동으로 생성·제거합니다.
