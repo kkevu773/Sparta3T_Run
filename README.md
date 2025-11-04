@@ -66,6 +66,9 @@
 ## [함승효]
 
 ## [정성재]
+- 계속되는 루프형식의 배경
+<img width="162" height="123" alt="스크린샷 2025-11-04 164316" src="https://github.com/user-attachments/assets/504a6f4a-6523-485e-85a0-ab33ecf71558" />
+- 배경 전환 시 FadeON / Out 활용 
 
 ## [박영재]
 
