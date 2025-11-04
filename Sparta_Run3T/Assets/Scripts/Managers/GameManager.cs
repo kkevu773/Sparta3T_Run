@@ -89,55 +89,6 @@ public class GameManager : MonoBehaviour
         InitGame();
     }
 
-    private void Update()
-    {
-        HandleInput();
-    }
-
-    // 게임 상태에 따른 입력 처리
-    private void HandleInput()
-    {
-        switch (currentState)
-        {
-            case GameState.CountDown:
-                // 카운트다운 중에는 입력 무시
-                // 카운트다운 스킵 테스트 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    StopAllCoroutines();  // 카운트다운 중단
-                    StartGame();          // 바로 게임 시작
-                }
-
-                break;
-
-            case GameState.Playing:
-                // H 키로 회복 아이템 획득 테스트 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.H))
-                {
-                    OnHealItemCollected(1);
-                }
-                // U 키로 속도 증가 아이템 획득 테스트 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.U))
-                {
-                    OnSpeedUpItemCollected(1.5f, 5f);
-                }
-                // D 키로 속도 감소 아이템 획득 테스트 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.D))
-                {
-                    OnSpeedDownItemCollected(2f, 5f);
-                }
-                break;
-
-            case GameState.GameOver:
-                // R 키를 눌러 재시작 (개발용 - 나중에 삭제)
-                if (Input.GetKeyDown(KeyCode.R))
-                {
-                    RestartGame();
-                }
-                break;
-        }
-    }
-
     // 게임 시작 전, 난이도 설정
     public void SetDifficulty(Difficulty difficulty)
     {
