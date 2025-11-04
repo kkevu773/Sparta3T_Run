@@ -72,6 +72,7 @@
 - 시청각을 관장하는 3개의 매니저 구상
 > <img width="441" height="162" alt="매니저들 차이 drawio" src="https://github.com/user-attachments/assets/a1a2ed79-02be-401a-98b4-4bbe209d0cfe" />
 - 중앙 관리자인 GameManager의 구조를 유지하면서 설계
+> <img width="611" height="267" alt="단방향 싱글톤 drawio" src="https://github.com/user-attachments/assets/939d22e0-232e-4ca6-93c2-dc94d6ecbbac" />
 
 ## 오디오 매니저 
 
