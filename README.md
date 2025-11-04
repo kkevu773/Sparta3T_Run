@@ -188,8 +188,6 @@ private void SFXChange(float value)
 
 - ## 목적지
 
-> [Goal.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/Goal.cs)
-
 - ###  개요
 `Goal` 스크립트는 플레이어가 **도착 지점(Goal 오브젝트)**에 닿았을 때  
 게임 클리어 상태를 GameManager로 전달하는 역할을 합니다.  
@@ -222,9 +220,15 @@ private void OnTriggerEnter2D(Collider2D collision)
 > [Goal.cs](https://raw.githubusercontent.com/kkevu773/Sparta3T_Run/refs/heads/main/Sparta_Run3T/Assets/Scripts/Managers/Goal.cs)
 
 
- # 예시 이미지 / 영상
+ # 예시 이미지 / 플레이 이미지
   https://kenney.nl/assets 에셋스토어 활용
   <img width="918" height="515" alt="Sample A" src="https://github.com/user-attachments/assets/75a77e6f-9d54-497b-ba42-8fedebc066a6" />
+
+  
+> <img width="1920" height="1080" alt="게임 시연 mp4_20251104_151933 709" src="https://github.com/user-attachments/assets/bec5bbae-fbf1-4e16-bd1a-57a8847da2fc" />
+> <img width="1920" height="1080" alt="게임 시연 mp4_20251104_151920 549" src="https://github.com/user-attachments/assets/6fe6b06a-2fa8-4de4-874f-e7a3a28ef573" />
+> <img width="1920" height="1080" alt="게임 시연 mp4_20251104_151911 900" src="https://github.com/user-attachments/assets/b2d030b3-0a85-439a-b0a6-fcd50239efb1" />
+> <img width="1920" height="1080" alt="게임 시연 mp4_20251104_151904 995" src="https://github.com/user-attachments/assets/ede20f11-e8e0-4677-94c5-3a8136b112d4" />
 
 
 
