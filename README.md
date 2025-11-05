@@ -194,6 +194,10 @@ GameManager, PlayerHp와 연동해서 낙사 처리와 게임오버까지 연결
         }
     }
     ```
+<br>
+
+- 그 외 각종 매니저 스크립트 일부
+  - `GameManager` 와의 소통을 위한 공통 메서드 작성 (`/* */` 로 작성된 주석 참고 바랍니다 :)
 > [GameManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Managers/GameManager.cs)
 
 ## [함승효]
