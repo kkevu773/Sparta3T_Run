@@ -12,7 +12,7 @@
 
 
 # 와이어 프레임
-<img width="3664" height="1784" alt="W5Team3WireFrame" src="https://github.com/user-attachments/assets/d0265251-1230-46ba-ad1e-214a5dd88ce6" />
+<img width="3664" height="1784" alt="W5Team3WireFrame" src="https://github.com/kkevu773/Sparta3T_Run/blob/main/W5Team3WireFrame.png" />
 
 # 구현 기능
 - **캐릭터 자동 이동** 
