@@ -38,75 +38,82 @@
 ## [김상혁]
 - **`PlayerMove.cs`**
 
-- 플레이어의 점프 / 더블 점프 / 슬라이드 / 애니메이션을 전담하는 스크립트.
+  - 플레이어의 점프 / 더블 점프 / 슬라이드 / 애니메이션을 전담하는 스크립트.
 GameManager, PlayerHp와 연동해서 낙사 처리와 게임오버까지 연결.
 
-- **1) 점프 · 더블 점프 처리**
+  - **1) 점프 · 더블 점프 처리**
 
-maxJumps만큼 점프 가능 (기본 2회).
+    `maxJumps` 만큼 점프 가능 (기본 2회).
 
-점프 시 rb.velocity.y를 0으로 초기화 후 위로 힘을 줘서
-낙하 중이든 상승 중이든 항상 같은 높이로 점프.
+    점프 시 `rb.velocity.y` 를 `0` 으로 초기화 후 위로 힘을 줘서
+    낙하 중이든 상승 중이든 항상 같은 높이로 점프.
 
-두 번째 점프일 때만 더블 점프 연출 실행(StartDoubleJumpFX)
+    두 번째 점프일 때만 더블 점프 연출 실행(`StartDoubleJumpFX`)
 
-점프 성공 시 점프 사운드 재생
+    점프 성공 시 점프 사운드 재생
 
-    ```// 바닥에 닿았을 때 점프/회전 상태 초기화 (Update 내부)
-if (isGrounded && rb.velocity.y <= 0f)
-{
-    jumpCount = 0;
-    spinActive = false;
-    doubleJumpFX = false;
-    sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRZ);
-}
-
-// 점프 시도
-private void TryJump()
-{
-    if (jumpCount >= maxJumps) return;
-
-    bool isSecondJump = (jumpCount == 1);
-
-    // 세로 속도 초기화 후 위로 힘 추가
-    rb.velocity = new Vector2(rb.velocity.x, 0f);
-    rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-
-    // 점프 사운드 재생
-    if (AudioManager.Instance != null)
+    ```cs
+    
+    // 바닥에 닿았을 때 점프/회전 상태 초기화 (Update 내부)
+    if (isGrounded && rb.velocity.y <= 0f)
     {
-        AudioManager.Instance.Play(SoundKey.SFX_PLAYER_JUMP);
+        jumpCount = 0;
+        spinActive = false;
+        doubleJumpFX = false;
+        sr.transform.localEulerAngles = new Vector3(0f, 0f, spinStartRZ);
     }
-
-    // 두 번째 점프일 때만 회전 연출
-    if (isSecondJump)
-        StartDoubleJumpFX();
-
-    jumpCount++;
-}
+    
+    // 점프 시도
+    private void TryJump()
+    {
+        if (jumpCount >= maxJumps) return;
+    
+        bool isSecondJump = (jumpCount == 1);
+    
+        // 세로 속도 초기화 후 위로 힘 추가
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+    
+        // 점프 사운드 재생
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.Play(SoundKey.SFX_PLAYER_JUMP);
+        }
+    
+        // 두 번째 점프일 때만 회전 연출
+        if (isSecondJump)
+            StartDoubleJumpFX();
+    
+        jumpCount++;
+    }
     ```
 
-- **2) 슬라이드 + 콜라이더 변경**
+  - **2) 슬라이드 + 콜라이더 변경**
 
-슬라이드 키를 누르면 isSliding 활성화,
-캡슐 콜라이더의 size, offset을 슬라이드용 값으로 교체.
+    슬라이드 키를 누르면 `isSliding` 활성화,
+    캡슐 콜라이더의 `size`, `offset`을 슬라이드용 값으로 교체.
 
-스프라이트 위치도 slideOffset 만큼 내려서
-시각적으로도 엎드린 자세처럼 보이게 처리.
+    스프라이트 위치도 `slideOffset` 만큼 내려서
+    시각적으로도 엎드린 자세처럼 보이게 처리.
 
-키를 떼면 다시 원래 콜라이더/위치로 복구.
+    키를 떼면 다시 원래 콜라이더/위치로 복구.
 
-- **3) 애니메이션 스프라이트 전환**
+  - **3) 애니메이션 스프라이트 전환**
 
-우선순위는 더블 점프 > 공중 > 슬라이드 > 달리기.
+    우선순위는 더블 점프 > 공중 > 슬라이드 > 달리기.
 
-더블 점프 중이면 doubleJumpSprite.
+    더블 점프 중이면 `doubleJumpSprite`
 
-공중에 있고 더블 점프가 아니면 jumpSprite.
+    공중에 있고 더블 점프가 아니면 `jumpSprite`
 
-바닥에서 슬라이드 중이면 slideSprite.
+    바닥에서 슬라이드 중이면 `slideSprite`
 
-나머지는 runA, runB를 runFrameTime 간격으로 토글해서 러닝 애니메이션.
+    나머지는 `runA`, `runB`를 `runFrameTime` 간격으로 토글해서 러닝 애니메이션.
+
+> [PlayerMove.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/PlayerMove.cs)
+<br>[PlayerHp.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/PlayerHp.cs)
+<br>[TileMap.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/TileMap.cs)
+<br>[CoinDelete.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/CoinDelete.cs)
 
 ## [조아라]
 - **`GameManager.cs`**
@@ -191,11 +198,24 @@ private void TryJump()
 
 ## [함승효]
 
+> [ObstacleManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/ObstacleManager.cs)
+<br>[Obstacle.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Obstacle.cs)
+<br>[ObstacleMovement.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/ObstacleMovement.cs)
+<br>[ItemManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/ItemManager.cs)
+<br>[Hp.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/Hp.cs)
+<br>[SpeedItem.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/SpeedItem.cs)
+<br>[ScoreManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/ScoreManager.cs)
+<br>[SpawnManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/SpawnManager.cs)
+<br>[SilverCoin.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/SliverCoin.cs)
+<br>[GoldCoin.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/GoldCoin.cs)
+
 ## [정성재]
 <img width="162" height="123" alt="스크린샷 2025-11-04 164316" src="https://github.com/user-attachments/assets/504a6f4a-6523-485e-85a0-ab33ecf71558" />
 
 - 계속되는 루프형식의 배경
-- 배경 전환 시 FadeON / Out 활용 
+- 배경 전환 시 FadeON / Out 활용
+
+> [BackgroundManager.cs](https://github.com/kkevu773/Sparta3T_Run/blob/main/Sparta_Run3T/Assets/Scripts/BackgroundManager.cs)
 
 ## [박영재]
 
